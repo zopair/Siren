@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Siren-Trap | Defensive AI & Multimodal Security Research</title>
+  <meta name="description" content="Siren-Trap is an open-source Python framework for defensive AI red teaming, acoustic canary testing, multimodal security research, and security telemetry.">
+  <meta name="keywords" content="AI security, defensive AI red teaming, multimodal security, acoustic canary testing, Python security research, security telemetry, threat modeling">
+  <meta name="author" content="ALY HUSSEIN FEKRY ZOPAIR">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://zopair.github.io/Siren/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Siren-Trap">
+  <meta property="og:title" content="Siren-Trap | Defensive AI & Multimodal Security Research">
+  <meta property="og:description" content="An open-source Python framework for authorized defensive AI red teaming, acoustic canary testing, and multimodal security research.">
+  <meta property="og:url" content="https://zopair.github.io/Siren/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#071426">
+  <link rel="icon" href="assets/siren-trap-architecture.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Siren-Trap",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "description": "Open-source Python framework for defensive AI red teaming, acoustic canary testing, multimodal security research, and security telemetry.",
+    "codeRepository": "https://github.com/zopair/Siren",
+    "license": "https://opensource.org/license/mit",
+    "author": {"@type": "Person", "name": "ALY HUSSEIN FEKRY ZOPAIR"}
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Siren-Trap home"><span class="brand-mark" aria-hidden="true">S</span><span>SIREN-TRAP</span></a>
+    <nav aria-label="Primary navigation">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#research">Research</a>
+      <a href="https://github.com/zopair/Siren">GitHub</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">OPEN-SOURCE · DEFENSIVE SECURITY RESEARCH</p>
+      <h1>Measure trust boundaries.<br><span>Strengthen multimodal AI.</span></h1>
+      <p class="lead">Siren-Trap is a Python research framework for authorized defensive AI red teaming, acoustic canary testing, and multimodal security evaluation.</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/zopair/Siren">Explore repository</a>
+        <a class="button secondary" href="https://github.com/zopair/Siren/blob/main/README.md">Read quick start</a>
+      </div>
+      <div class="status-row"><span>Python 3.11+</span><span>MIT License</span><span>Alpha research prototype</span></div>
+    </section>
+    <section class="architecture" id="architecture">
+      <div class="section-heading"><p class="eyebrow">SYSTEM OVERVIEW</p><h2>A controlled, observable workflow</h2><p>Four explicit stages keep experiments bounded, reproducible, and researcher-controlled.</p></div>
+      <img src="assets/siren-trap-architecture.svg" alt="Siren-Trap architecture: authorized test scope, fixed inert canary, controlled receiver, and offline telemetry." loading="lazy">
+      <p class="diagram-caption">Static architecture overview. The interactive explorer runs in the local Flask preview and is not hosted on this documentation site.</p>
+    </section>
+    <section id="capabilities">
+      <div class="section-heading"><p class="eyebrow">CAPABILITIES</p><h2>Built for defensive evaluation</h2></div>
+      <div class="cards">
+        <article><span class="card-index">01</span><h3>Acoustic test artifacts</h3><p>Generate a fixed, harmless canary WAV through the ggwave integration for controlled lab evaluation.</p></article>
+        <article><span class="card-index">02</span><h3>Local decoy service</h3><p>Observe authorized interactions through an instrumented Flask service bound to localhost by default.</p></article>
+        <article><span class="card-index">03</span><h3>Security telemetry</h3><p>Record minimal structured JSON Lines events for offline analysis and reproducible reporting.</p></article>
+        <article><span class="card-index">04</span><h3>Passive audio analysis</h3><p>Inspect supported PCM WAV recordings without transmitting audio or claiming receiver compatibility.</p></article>
+      </div>
+    </section>
+    <section id="research" class="research">
+      <div class="section-heading"><p class="eyebrow">RESEARCH & SAFETY</p><h2>Explicit boundaries. Honest evidence.</h2></div>
+      <p>Siren-Trap is an alpha research prototype—not a production containment system or agent-control platform. It uses a fixed non-executable marker, does not execute observations, and is intended only for systems and devices you own or are explicitly authorized to assess.</p>
+      <div class="doc-links">
+        <a href="https://github.com/zopair/Siren/blob/main/docs/ARCHITECTURE.md">Architecture notes ↗</a>
+        <a href="https://github.com/zopair/Siren/blob/main/docs/THREAT_MODEL.md">Threat model ↗</a>
+        <a href="https://github.com/zopair/Siren/blob/main/docs/RESEARCH_METHODOLOGY.md">Research methodology ↗</a>
+        <a href="https://github.com/zopair/Siren/blob/main/docs/ACOUSTIC_TESTING.md">Acoustic testing ↗</a>
+        <a href="https://github.com/zopair/Siren/blob/main/SECURITY.md">Security policy ↗</a>
+      </div>
+    </section>
+  </main>
+  <footer><span>© 2026 ALY HUSSEIN FEKRY ZOPAIR</span><a href="https://github.com/zopair/Siren">Source code on GitHub ↗</a></footer>
+</body>
+</html>
