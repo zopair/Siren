@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Siren-Trap — Defensive AI Security Research</title>
+<desc id="desc">Dark navy and cyan technical cover showing a defensive multimodal AI security research framework.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#061426"/><stop offset="1" stop-color="#102d4a"/></linearGradient><linearGradient id="glow"><stop stop-color="#54d9ee"/><stop offset="1" stop-color="#7ba8ff"/></linearGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#24415d" stroke-width="1" opacity=".5"/></pattern></defs>
+<rect width="1200" height="630" fill="url(#bg)"/><rect width="1200" height="630" fill="url(#grid)"/>
+<circle cx="1020" cy="130" r="250" fill="#1c6680" opacity=".12"/><circle cx="1020" cy="130" r="170" fill="none" stroke="#54d9ee" stroke-width="2" opacity=".35"/>
+<path d="M730 315h350" stroke="url(#glow)" stroke-width="3" opacity=".65"/><path d="M760 315l18-18 18 36 18-54 18 72 18-36 18 18h210" fill="none" stroke="#54d9ee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<g fill="#0c2239" stroke="#54d9ee" stroke-width="2"><rect x="735" y="385" width="105" height="72" rx="12"/><rect x="865" y="385" width="105" height="72" rx="12"/><rect x="995" y="385" width="105" height="72" rx="12"/></g><g fill="#eaf6ff" font-family="Arial,sans-serif" font-size="15" text-anchor="middle"><text x="787" y="415">CANARY</text><text x="787" y="437">MARKER</text><text x="917" y="415">CONTROLLED</text><text x="917" y="437">RECEIVER</text><text x="1047" y="415">OFFLINE</text><text x="1047" y="437">TELEMETRY</text></g>
+<text x="82" y="150" fill="#54d9ee" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="7">OPEN-SOURCE SECURITY RESEARCH</text>
+<text x="78" y="270" fill="#f1f7ff" font-family="Arial,sans-serif" font-size="94" font-weight="700" letter-spacing="-4">SIREN-TRAP</text>
+<text x="84" y="330" fill="#a9c1d8" font-family="Arial,sans-serif" font-size="29">Defensive AI &amp; Multimodal Security</text>
+<text x="84" y="378" fill="#a9c1d8" font-family="Arial,sans-serif" font-size="22">Acoustic canary testing · Trust boundaries · Security telemetry</text>
+<rect x="84" y="445" width="440" height="2" fill="url(#glow)"/><text x="84" y="493" fill="#54d9ee" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">DETECT  ·  MEASURE  ·  EVALUATE  ·  DEFEND</text>
+<text x="84" y="570" fill="#7792ad" font-family="Arial,sans-serif" font-size="16">PYTHON 3.11+  |  MIT LICENSE  |  ALPHA RESEARCH PROTOTYPE</text>
+</svg>

@@ -15,10 +15,18 @@ authors = [
 keywords = [
   "ai-security",
   "multimodal-security",
-  "red-team",
+  "ai-red-teaming",
+  "defensive-security",
+  "acoustic-canary",
+  "audio-analysis",
   "honeypot",
-  "acoustic-analysis",
+  "security-telemetry",
+  "threat-modeling",
+  "flask",
+  "ggwave",
+  "python",
   "security-research",
+  "trust-boundaries",
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -43,9 +51,9 @@ dependencies = [
 dev = ["pytest>=8,<10", "pytest-cov>=5,<8", "ruff>=0.9,<1"]
 
 [project.urls]
-Homepage = "https://github.com/zopair/Siren"
+Homepage = "https://zopair.github.io/Siren/"
 Repository = "https://github.com/zopair/Siren"
-Documentation = "https://github.com/zopair/Siren/tree/main/docs"
+Documentation = "https://zopair.github.io/Siren/"
 Issues = "https://github.com/zopair/Siren/issues"
 Security = "https://github.com/zopair/Siren/security"
 
