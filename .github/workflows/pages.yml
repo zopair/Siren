@@ -6,6 +6,11 @@ on:
     paths:
       - "docs/**"
       - ".github/workflows/pages.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -21,9 +26,13 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Validate static documentation
         run: |
           test -s docs/index.html
@@ -39,6 +48,7 @@ jobs:
           path: docs
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
