@@ -1,16 +1,21 @@
 import math
 import struct
+import sys
 import wave
+from types import SimpleNamespace
 
 import pytest
 
+from siren_trap.payload_generator.build_trap import encode_canary
 from siren_trap.telemetry.acoustic_analysis import analyze_wav
 
 
 def _write_tone(path, frequency, sample_rate=48_000, duration=0.1):
     count = int(sample_rate * duration)
     frames = b"".join(
-        struct.pack("<h", int(12_000 * math.sin(2 * math.pi * frequency * i / sample_rate)))
+        struct.pack(
+            "<h", int(12_000 * math.sin(2 * math.pi * frequency * i / sample_rate))
+        )
         for i in range(count)
     )
     with wave.open(str(path), "wb") as output:
@@ -54,7 +59,24 @@ def test_rejects_non_16_bit_pcm(tmp_path):
         output.setnchannels(1)
         output.setsampwidth(1)
         output.setframerate(48_000)
-        output.writeframes(b"\x00" * 128)
+        output.writeframes(b"\\x00" * 128)
 
     with pytest.raises(ValueError, match="16-bit PCM"):
         analyze_wav(wav_path)
+
+
+def test_generator_selects_ggwave_ultrasound_fast(monkeypatch):
+    observed = {}
+
+    def fake_encode(message, *, protocolId, volume):
+        observed.update(message=message, protocol_id=protocolId, volume=volume)
+        return b"\\x01\\x00" * 16
+
+    monkeypatch.setitem(sys.modules, "ggwave", SimpleNamespace(encode=fake_encode))
+
+    result = encode_canary()
+
+    assert result == b"\\x01\\x00" * 16
+    assert observed["protocol_id"] == 4
+    assert observed["volume"] == 10
+    assert observed["message"] == "SIREN-CANARY-TEST-001"
