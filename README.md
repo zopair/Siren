@@ -24,7 +24,7 @@ Siren-Trap is an open-source Python framework for defensive AI red teaming and m
 
 - **Project documentation:** [Siren-Trap documentation site](https://zopair.github.io/Siren/)
 - [Architecture](docs/ARCHITECTURE.md) · [Threat model](docs/THREAT_MODEL.md) · [Research methodology](docs/RESEARCH_METHODOLOGY.md) · [Acoustic testing](docs/ACOUSTIC_TESTING.md)
-- [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Citation metadata](CITATION.cff)
+- [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Citation metadata](CITATION.cff) · [Industry outreach kit](docs/OUTREACH.md)
 
 ## Research objectives
 
