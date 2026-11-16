@@ -60,6 +60,13 @@ flowchart TD
     J --> K[Offline analysis and report]
 ```
 
+
+### Explore the architecture
+
+![Siren-Trap defensive research architecture](docs/assets/siren-trap-architecture.svg)
+
+The diagram summarizes the four-stage, researcher-controlled workflow: authorized test scope, fixed inert canary, controlled reception, and offline telemetry review. GitHub displays this repository illustration as a static image; the **interactive architecture** explorer is embedded in the local research preview. Start the service and open [http://127.0.0.1:5000/#architecture-map](http://127.0.0.1:5000/#architecture-map) to select each stage with a pointer, touch, or keyboard.
+
 ## Repository structure
 
 ```text

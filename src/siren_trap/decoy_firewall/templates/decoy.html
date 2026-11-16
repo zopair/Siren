@@ -206,6 +206,36 @@
       font-size: .76rem;
     }
 
+
+
+    .architecture-panel { margin-top: 1rem; overflow: hidden; }
+    .architecture-panel .panel-intro { max-width: 720px; }
+    .architecture-map-wrap {
+      overflow: hidden;
+      border: 1px solid #29415d;
+      border-radius: .9rem;
+      background: radial-gradient(ellipse at 50% 42%, #132b43 0%, #0b1728 72%);
+    }
+    .architecture-map { display: block; width: 100%; height: auto; }
+    .architecture-map .grid-line { stroke: #24405b; stroke-width: 1; opacity: .35; }
+    .architecture-map .route { fill: none; stroke: #3e8db8; stroke-width: 2.5; stroke-dasharray: 7 9; animation: route-flow 18s linear infinite; }
+    .architecture-map .node { cursor: pointer; outline: none; }
+    .architecture-map .node rect { fill: #142a42; stroke: #3b6687; stroke-width: 1.5; transition: stroke 160ms ease, fill 160ms ease, filter 160ms ease; }
+    .architecture-map .node .node-title { fill: #eff7ff; font-size: 17px; font-weight: 700; }
+    .architecture-map .node .node-copy { fill: #a8bfd4; font-size: 12px; }
+    .architecture-map .node .node-icon { fill: #82d7ff; font-size: 20px; font-weight: 800; }
+    .architecture-map .node[aria-pressed="true"] rect,
+    .architecture-map .node:focus-visible rect { fill: #1b3d5a; stroke: #8cddff; stroke-width: 2.5; filter: drop-shadow(0 0 9px rgb(83 182 232 / 38%)); }
+    .architecture-map .node:hover rect { stroke: #8cddff; }
+    .architecture-map .boundary { fill: none; stroke: #75d6ad; stroke-width: 1.4; stroke-dasharray: 4 7; opacity: .65; }
+    .architecture-map .boundary-label { fill: #8ce0ba; font-size: 11px; letter-spacing: 2px; }
+    .architecture-detail { display: flex; align-items: flex-start; gap: .85rem; margin-top: .9rem; padding: 1rem; border: 1px solid #29415d; border-radius: .8rem; background: #0d1a2b; }
+    .architecture-detail-mark { display: grid; width: 2rem; height: 2rem; flex: 0 0 auto; place-items: center; border: 1px solid #397ba0; border-radius: .6rem; color: var(--accent); font-weight: 800; }
+    .architecture-detail h3 { margin: 0; font-size: .9rem; }
+    .architecture-detail p { margin: .35rem 0 0; color: #aebfd2; font-size: .84rem; line-height: 1.6; }
+    .architecture-hint { margin: .75rem 0 0; color: var(--muted); font-size: .75rem; }
+    @keyframes route-flow { to { stroke-dashoffset: -160; } }
+
     @media (max-width: 720px) {
       .overview { grid-template-columns: 1fr; }
       .metric { min-height: auto; }
@@ -218,7 +248,7 @@
       .scope-pill { padding: .42rem .55rem; font-size: .68rem; }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation: none !important; }
     }
   </style>
 </head>
@@ -268,6 +298,55 @@
             <p class="metric-note">Minimal JSONL records for local review and offline analysis.</p>
           </article>
         </div>
+      </section>
+
+
+
+      <section class="panel architecture-panel" aria-labelledby="architecture-title">
+        <p class="eyebrow">Interactive system map / 02</p>
+        <h2 id="architecture-title">Inside the Siren-Trap research loop</h2>
+        <p class="panel-intro">Explore the defensive path from a controlled test environment to offline evidence review. Select any node to inspect its role; every stage remains observational and researcher-controlled.</p>
+        <div class="architecture-map-wrap">
+          <svg id="architecture-map" class="architecture-map" viewBox="0 0 960 440" role="group" aria-labelledby="architecture-svg-title architecture-svg-desc" xmlns="http://www.w3.org/2000/svg">
+            <title id="architecture-svg-title">Siren-Trap defensive research architecture</title>
+            <desc id="architecture-svg-desc">Four interactive stages: authorized environment, fixed inert canary, controlled receiver and offline telemetry analysis, connected by a one-way observational flow.</desc>
+            <defs>
+              <pattern id="architecture-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" class="grid-line" fill="none"/></pattern>
+              <marker id="architecture-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#65bfe9"/></marker>
+            </defs>
+            <rect width="960" height="440" fill="url(#architecture-grid)"/>
+            <rect class="boundary" x="28" y="32" width="904" height="374" rx="20"/>
+            <text class="boundary-label" x="52" y="59">AUTHORIZED / ISOLATED RESEARCH BOUNDARY</text>
+            <path class="route" marker-end="url(#architecture-arrow)" d="M220 213 H270 M445 213 H495 M670 213 H720"/>
+            <g class="node" data-component="environment" role="button" tabindex="0" aria-label="Authorized environment" aria-pressed="false">
+              <rect x="48" y="145" width="172" height="136" rx="14"/>
+              <text class="node-icon" x="70" y="181">01</text><text class="node-title" x="70" y="211">Test scope</text>
+              <text class="node-copy" x="70" y="237">Authorized setup</text><text class="node-copy" x="70" y="255">Local-first boundary</text>
+            </g>
+            <g class="node" data-component="canary" role="button" tabindex="0" aria-label="Fixed inert canary" aria-pressed="false">
+              <rect x="270" y="145" width="175" height="136" rx="14"/>
+              <text class="node-icon" x="292" y="181">02</text><text class="node-title" x="292" y="211">Fixed canary</text>
+              <text class="node-copy" x="292" y="237">Harmless marker</text><text class="node-copy" x="292" y="255">No executable content</text>
+            </g>
+            <g class="node" data-component="receiver" role="button" tabindex="0" aria-label="Controlled receiver and observation" aria-pressed="false">
+              <rect x="495" y="145" width="175" height="136" rx="14"/>
+              <text class="node-icon" x="517" y="181">03</text><text class="node-title" x="517" y="211">Receiver</text>
+              <text class="node-copy" x="517" y="237">Controlled capture</text><text class="node-copy" x="517" y="255">Observation only</text>
+            </g>
+            <g class="node" data-component="telemetry" role="button" tabindex="0" aria-label="Offline telemetry analysis" aria-pressed="false">
+              <rect x="720" y="145" width="190" height="136" rx="14"/>
+              <text class="node-icon" x="742" y="181">04</text><text class="node-title" x="742" y="211">Telemetry</text>
+              <text class="node-copy" x="742" y="237">Structured local events</text><text class="node-copy" x="742" y="255">Offline evidence review</text>
+            </g>
+            <text x="480" y="337" fill="#8da8c1" text-anchor="middle" font-size="13">Observe → record → evaluate</text>
+            <text x="480" y="361" fill="#68849f" text-anchor="middle" font-size="11">No agent control · No instruction execution · No external telemetry</text>
+          </svg>
+        </div>
+        <div class="architecture-detail" id="architecture-detail" role="status" aria-live="polite" aria-atomic="true">
+          <span class="architecture-detail-mark" aria-hidden="true">i</span>
+          <div><h3 id="architecture-detail-title">Select a stage to explore</h3><p id="architecture-detail-copy">Use a pointer, touch, Enter, or Space to inspect each part of the research loop. The diagram describes observation—not a control path.</p></div>
+        </div>
+        <p class="architecture-hint">Keyboard accessible · Reduced-motion aware · No external assets or tracking</p>
       </section>
 
       <section class="workspace" aria-label="Research controls and safeguards">
@@ -321,6 +400,36 @@
   </div>
 
   <script>
+
+
+    const architectureDetails = {
+      environment: { title: "01 · Authorized test scope", copy: "Experiments stay inside systems and devices the researcher owns or is explicitly permitted to assess. The decoy service defaults to loopback; isolation and authorization remain operational responsibilities." },
+      canary: { title: "02 · Fixed inert canary", copy: "A deterministic, harmless marker is used as a test artifact. It is not an instruction, command, arbitrary payload, or executable content." },
+      receiver: { title: "03 · Controlled reception", copy: "A researcher-managed receiver captures or evaluates the test signal. Artifact generation, physical reception, decoding, and agent observation are separate claims that require separate evidence." },
+      telemetry: { title: "04 · Offline telemetry", copy: "Minimal structured events support local review and reproducible analysis. Logs are evidence to inspect—not instructions to execute—and no third-party telemetry is involved." }
+    };
+    const architectureNodes = document.querySelectorAll("#architecture-map [data-component]");
+    const detailTitle = document.getElementById("architecture-detail-title");
+    const detailCopy = document.getElementById("architecture-detail-copy");
+
+    function selectArchitectureNode(node) {
+      const detail = architectureDetails[node.dataset.component];
+      if (!detail) return;
+      architectureNodes.forEach((item) => item.setAttribute("aria-pressed", String(item === node)));
+      detailTitle.textContent = detail.title;
+      detailCopy.textContent = detail.copy;
+    }
+
+    architectureNodes.forEach((node) => {
+      node.addEventListener("click", () => selectArchitectureNode(node));
+      node.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectArchitectureNode(node);
+        }
+      });
+    });
+
     const button = document.getElementById("play");
     const audio = document.getElementById("canary");
     const status = document.getElementById("status");
