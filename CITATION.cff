@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use Siren-Trap in research, please cite this repository."
+title: "Siren-Trap"
+type: software
+authors:
+  - family-names: "ZOPAIR"
+    given-names: "ALY HUSSEIN FEKRY"
+    name: "ALY HUSSEIN FEKRY ZOPAIR"
+repository-code: "https://github.com/zopair/Siren"
+license: MIT
+version: 0.1.0
