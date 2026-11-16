@@ -65,7 +65,62 @@ flowchart TD
 
 ![Siren-Trap defensive research architecture](docs/assets/siren-trap-architecture.svg)
 
-The diagram summarizes the four-stage, researcher-controlled workflow: authorized test scope, fixed inert canary, controlled reception, and offline telemetry review. GitHub displays this repository illustration as a static image; the **interactive architecture** explorer is embedded in the local research preview. Start the service and open [http://127.0.0.1:5000/#architecture-map](http://127.0.0.1:5000/#architecture-map) to select each stage with a pointer, touch, or keyboard.
+The diagram summarizes the four-stage, researcher-controlled workflow: authorized test scope, fixed inert canary, controlled reception, and offline telemetry review. GitHub displays this repository illustration as a static image; the **interactive architecture** explorer is available only in the running local Flask preview. To use it, install the project, start the service with `python -m siren_trap.decoy_firewall.app`, then open `http://127.0.0.1:5000/#architecture-map` in a browser on the **same machine**. This loopback address is not a public website and will not work from GitHub, another device, or before the Flask service is running. The interactive stages support pointer, touch, and keyboard input. A public interactive link requires a separately reviewed deployment; no public URL is currently configured.
+
+## Keywords
+
+Siren-Trap research and discovery keywords (50 unique terms):
+
+1. Multimodal security
+2. AI red teaming
+3. Defensive deception
+4. Physical-layer security
+5. Acoustic watermarking
+6. Canary token
+7. Trust boundaries
+8. Agent security
+9. Audio signal processing
+10. ggwave
+11. Flask instrumentation
+12. Local honeypot
+13. Security telemetry
+14. JSON Lines
+15. WAV analysis
+16. Ultrasonic spectrum
+17. 18–20 kHz analysis
+18. PCM audio
+19. Controlled experiments
+20. Authorized testing
+21. Isolated environments
+22. Input validation
+23. Untrusted data
+24. Policy compliance
+25. Threat modeling
+26. Attack surface analysis
+27. Security observability
+28. Research framework
+29. Python security
+30. Defensive tooling
+31. Canary detection
+32. Signal decoding
+33. Receiver compatibility
+34. Acoustic testing
+35. Offline analysis
+36. Event logging
+37. Experiment reproducibility
+38. AI evaluation
+39. Multimodal agents
+40. Audio perception
+41. Security benchmarks
+42. Software assurance
+43. Localhost service
+44. Privacy-conscious logging
+45. Non-executable marker
+46. Human-authorized assessment
+47. CI automation
+48. Open-source security
+49. Research prototype
+50. Defensive AI evaluation
 
 ## Repository structure
 
