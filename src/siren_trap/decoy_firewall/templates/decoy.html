@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Siren-Trap Research Node</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+      background: #101522; color: #e8edf7; }
+    main { width: min(90%, 620px); padding: 2rem; border: 1px solid #34415c;
+      border-radius: 16px; background: #192235; text-align: center; }
+    h1 { color: #58b7ff; letter-spacing: .08em; }
+    button { padding: .8rem 1.2rem; border: 0; border-radius: 8px;
+      background: #147bd1; color: white; cursor: pointer; }
+    #status { color: #9baac4; min-height: 1.5em; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SIREN RESEARCH NODE</h1>
+    <p>Controlled multimodal security research environment.</p>
+    <p>Play the harmless acoustic canary only when you choose to.</p>
+    <button id="play" type="button">Play research signal</button>
+    <p id="status" role="status" aria-live="polite">Signal not played.</p>
+    <audio id="canary" preload="none">
+      <source src="/audio/canary.wav" type="audio/wav">
+    </audio>
+  </main>
+  <script>
+    const button = document.getElementById("play");
+    const audio = document.getElementById("canary");
+    const status = document.getElementById("status");
+    button.addEventListener("click", async () => {
+      try {
+        audio.src = "/audio/canary.wav";
+        await audio.play();
+        status.textContent = "Research signal playing.";
+      } catch {
+        status.textContent = "Playback unavailable. Check audio support.";
+      }
+    });
+  </script>
+</body>
+</html>
