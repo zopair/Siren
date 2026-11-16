@@ -102,3 +102,16 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Passively inspect 18–20 kHz energy in a 16-bit PCM WAV file."
+    )
+    parser.add_argument("wav_file", type=Path)
+    args = parser.parse_args()
+    print(json.dumps(analyze_wav(args.wav_file), indent=2))
+
+
+if __name__ == "__main__":
+    main()
