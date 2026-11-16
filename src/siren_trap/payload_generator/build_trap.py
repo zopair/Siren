@@ -9,10 +9,11 @@ from pathlib import Path
 
 CANARY_MARKER = "SIREN-CANARY-TEST-001"
 SAMPLE_RATE = 48_000
+ULTRASOUND_FAST_PROTOCOL_ID = 4
 
 
 def encode_canary() -> bytes:
-    """Encode the fixed research marker using ggwave.
+    """Encode the fixed research marker with ggwave's ultrasound-fast protocol.
 
     The marker is intentionally fixed: arbitrary prompt or command payloads
     are not accepted by this proof-of-concept generator.
@@ -24,7 +25,11 @@ def encode_canary() -> bytes:
             "ggwave is required. Install project dependencies first."
         ) from exc
 
-    encoded = ggwave.encode(CANARY_MARKER, protocolId=1, volume=10)
+    encoded = ggwave.encode(
+        CANARY_MARKER,
+        protocolId=ULTRASOUND_FAST_PROTOCOL_ID,
+        volume=10,
+    )
     if not isinstance(encoded, (bytes, bytearray)) or not encoded:
         raise RuntimeError("ggwave returned an empty or invalid PCM buffer.")
     if len(encoded) % 2:
