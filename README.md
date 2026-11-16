@@ -10,14 +10,21 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 [![Research status](https://img.shields.io/badge/Status-Research%20Prototype-orange)](docs/THREAT_MODEL.md)
+[![Documentation](https://img.shields.io/badge/Documentation-GitHub%20Pages-0969da)](https://zopair.github.io/Siren/)
 
 **Maintained by ALY HUSSEIN FEKRY ZOPAIR**
 
 </div>
 
-Siren-Trap is an open-source, defensive research framework for evaluating trust boundaries in multimodal AI systems. It combines controlled acoustic test artifacts, a local instrumented decoy service, fixed canary markers, and structured telemetry to help researchers observe how authorized systems handle untrusted input.
+Siren-Trap is an open-source Python framework for defensive AI red teaming and multimodal security research. It evaluates trust boundaries using controlled acoustic test artifacts, fixed inert canary markers, a localhost-first instrumented decoy service, and structured security telemetry. The project supports authorized experiments into audio perception, untrusted-input handling, and defensive AI evaluation.
 
 > **Scope and safety:** Siren-Trap is a research prototype, not an agent-control platform or a production containment system. It uses an inert, fixed marker and does not execute, promote, or follow content received from an agent. Run experiments only in isolated environments and against systems you own or are explicitly authorized to assess.
+
+## Documentation and project resources
+
+- **Project documentation:** [Siren-Trap documentation site](https://zopair.github.io/Siren/)
+- [Architecture](docs/ARCHITECTURE.md) · [Threat model](docs/THREAT_MODEL.md) · [Research methodology](docs/RESEARCH_METHODOLOGY.md) · [Acoustic testing](docs/ACOUSTIC_TESTING.md)
+- [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Citation metadata](CITATION.cff)
 
 ## Research objectives
 
