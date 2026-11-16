@@ -1,184 +1,193 @@
-# 🚨 Siren-Trap
+# Siren-Trap
 
 <div align="center">
 
-### Physical-Layer AI Deception & Multimodal Security Research
+**Defensive Physical-Layer & Multimodal AI Security Research**
 
-**Detect · Measure · Understand · Defend**
+*Detect · Measure · Evaluate · Defend*
 
 [![CI](https://github.com/zopair/Siren/actions/workflows/ci.yml/badge.svg)](https://github.com/zopair/Siren/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Research%20Prototype-orange.svg)](docs/THREAT_MODEL.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
+[![Research status](https://img.shields.io/badge/Status-Research%20Prototype-orange)](docs/THREAT_MODEL.md)
+
+**Maintained by ALY HUSSEIN FEKRY ZOPAIR**
 
 </div>
 
-Siren-Trap is an open-source defensive research framework for studying acoustic data channels, multimodal prompt-injection exposure, and trust-boundary failures in autonomous AI agents. It combines controlled data-over-sound experiments, an instrumented decoy web service, canary markers, and structured security telemetry.
+Siren-Trap is an open-source, defensive research framework for evaluating trust boundaries in multimodal AI systems. It combines controlled acoustic test artifacts, a local instrumented decoy service, fixed canary markers, and structured telemetry to help researchers observe how authorized systems handle untrusted input.
 
-> **Research boundary:** Siren-Trap generates harmless, explicitly identified test markers. It does not attempt to covertly override system instructions, take control of agents, or disrupt third-party systems.
+> **Scope and safety:** Siren-Trap is a research prototype, not an agent-control platform or a production containment system. It uses an inert, fixed marker and does not execute, promote, or follow content received from an agent. Run experiments only in isolated environments and against systems you own or are explicitly authorized to assess.
 
-## Why this matters
+## Research objectives
 
-As AI agents gain access to microphones, browsers, tools, and other agents, their attack surface expands beyond ordinary text prompts. A model may receive content through an audio perception pipeline, a transcription service, a retrieved document, or an external tool. If untrusted content is not kept distinct from trusted instructions, the system can confuse data with commands.
+Multimodal agents may receive information through audio perception, transcription, retrieved documents, browsers, and external tools. Those inputs are data—not trusted instructions. Siren-Trap helps researchers study whether this boundary is preserved and record evidence at distinct stages of an experiment.
 
-Siren-Trap provides a controlled way to test that boundary and record what happened. Acoustic transport is a carrier, not proof of prompt injection: successful decoding, model interpretation, and policy violation are separate outcomes.
+The framework intentionally separates:
 
-## Core capabilities
+1. **Artifact generation** — whether a valid test WAV was produced.
+2. **Transport and reception** — whether a signal was emitted and captured in a controlled setup.
+3. **Decoding** — whether the receiving pipeline reconstructed the expected marker.
+4. **Observation** — whether the marker appeared in the agent's observable output.
+5. **Policy handling** — whether the system treated the marker as untrusted data.
 
-- **Acoustic test signals:** Generate WAV test artifacts through the open-source [ggwave](https://github.com/ggerganov/ggwave) project.
-- **Decoy environment:** Serve a small, instrumented Flask honeypot.
-- **Canary detection:** Identify known research markers in supplied observations.
-- **Structured telemetry:** Record event types and timestamps without executing submitted content.
-- **Reproducible evaluation:** Keep transport, observation, and policy outcomes separate.
-- **Defensive defaults:** Localhost binding, explicit playback, no arbitrary command execution, and minimal dependencies.
+A generated WAV or detected spectral peak does not prove audibility, microphone compatibility, successful decoding, agent interpretation, or policy failure.
 
-## Threat model: data/instruction confusion
+## Capabilities
 
-Multimodal systems process content from audio, images, video, retrieved resources, and tools. A trust-boundary failure occurs when untrusted content is interpreted as authoritative instructions rather than data to analyze.
-
-A controlled test can measure distinct stages:
-
-1. **Transport:** Was an acoustic signal emitted and received?
-2. **Decoding:** Was the marker decoded by the receiving pipeline?
-3. **Observation:** Did the agent report or otherwise expose the marker?
-4. **Instruction handling:** Did the agent preserve the marker as untrusted data?
-5. **Policy outcome:** Did the agent follow its trusted policy?
-
-These stages must not be collapsed into a single “compromise” metric. Audio encoding does not guarantee that a model will treat a signal as an instruction or override its system prompt.
+- **Fixed acoustic canary:** Generate a WAV artifact from a hard-coded, harmless research marker using [ggwave](https://github.com/ggerganov/ggwave).
+- **Local decoy service:** Run an instrumented Flask service with localhost as its default bind address.
+- **Canary observation checks:** Detect known markers in supplied observations without executing their contents.
+- **Structured telemetry:** Record minimal event metadata as JSON Lines.
+- **Passive spectral analysis:** Inspect 18–20 kHz energy in supported 16-bit PCM WAV recordings.
+- **Automated quality checks:** Run lint and test checks across supported Python versions.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A[Authorized test agent] --> B[Decoy environment]
-    B --> C[Decoy web service]
-    C --> D[Explicit acoustic canary]
-    D --> E[Agent audio perception]
-    E --> F[Observation supplied to evaluator]
-    F --> G{Known marker present?}
-    G -->|Yes| H[Canary observation event]
-    G -->|No| I[No-match event]
-    C --> J[Decoy access telemetry]
-    H --> K[Structured event log]
-    I --> K
-    J --> K
-    K --> L[Offline evaluation and report]
+    A[Authorized test environment] --> B[Local decoy service]
+    B --> C[Explicit fixed canary WAV]
+    C --> D[Controlled receiver]
+    D --> E[Observation supplied to evaluator]
+    E --> F{Known marker observed?}
+    F -->|Yes| G[Canary observation event]
+    F -->|No| H[No-match event]
+    B --> I[Decoy access event]
+    G --> J[JSONL telemetry]
+    H --> J
+    I --> J
+    J --> K[Offline analysis and report]
 ```
 
-## Repository layout
+## Repository structure
 
 ```text
 src/siren_trap/
-  payload_generator/   # Controlled acoustic canary generation
-  decoy_firewall/      # Instrumented Flask decoy service
+  payload_generator/   # Fixed acoustic canary generation
+  decoy_firewall/      # Local instrumented Flask service
   detection/           # Canary observation checks
-  telemetry/           # JSONL event recording
-tests/
-  unit/                # Deterministic component tests
-  integration/         # Local Flask test-client checks
-docs/                  # Architecture, threat model, research protocol
-.github/workflows/     # CI
+  telemetry/           # JSONL event logging and passive analysis
+tests/                 # Automated unit and integration tests
+docs/                  # Architecture, threat model, and research protocol
+.github/workflows/     # Continuous integration
 ```
 
-## Getting started
+## Quick start
 
 ### Requirements
 
-- Python 3.11+
+- Python 3.11, 3.12, or 3.13
 - pip
-- A supported platform/build environment for the ggwave Python package
+- A platform supported by the upstream ggwave Python package
 
-### Install
+### Install from source
 
 ```bash
 git clone https://github.com/zopair/Siren.git
 cd Siren
+
 python -m venv .venv
-# Linux/macOS:
+
+# Linux / macOS
 source .venv/bin/activate
-# Windows PowerShell:
-# .venv\\Scripts\\Activate.ps1
+
+# Windows PowerShell
+# .venv\Scripts\Activate.ps1
+
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
 
-### Generate a canary WAV
+### Generate the fixed canary
 
 ```bash
-python -m siren_trap.payload_generator.build_trap \\
+python -m siren_trap.payload_generator.build_trap \
   --output assets/audio/canary.wav
 ```
 
-The generator accepts only the project's fixed, harmless canary marker. It writes mono 16-bit PCM using the sample-rate contract documented by the ggwave Python binding. Validate playback and round-trip decoding on target hardware; file generation alone does not establish acoustic reachability.
+The generator does not accept arbitrary prompts, commands, or user-supplied payloads. The output is a test artifact; validate the actual receiver-side decode path and hardware compatibility independently.
 
-### Run the decoy service
+### Start the local decoy service
 
 ```bash
 python -m siren_trap.decoy_firewall.app
 ```
 
-Open http://127.0.0.1:5000. Audio playback is initiated by a visible user action; browsers commonly block autoplay.
+Open http://127.0.0.1:5000. The service binds to loopback by default. Do not expose it to a network without a separate deployment security review and explicit authorization.
 
-### Run tests
+### Analyze a recorded WAV file
 
 ```bash
-python -m pytest
-python -m ruff check .
+python -m siren_trap.telemetry.acoustic_analysis path/to/recording.wav
 ```
 
-## Research use cases
+The passive analyzer supports 16-bit PCM WAV input with a sample rate greater than 40 kHz. It scans the 18–20 kHz band and reports measured signal energy. It does not play, transmit, or decode audio. See [Acoustic Testing](docs/ACOUSTIC_TESTING.md) for methodology and limitations.
 
-- **Defensive research:** Evaluate how an authorized multimodal system handles untrusted acoustic observations.
-- **Authorized red teaming:** Measure instruction/data separation in systems for which you have explicit permission.
-- **Honeypot studies:** Record visits to controlled decoy resources.
-- **Benchmarking:** Compare perception pipelines using repeatable canary scenarios.
-- **Education:** Demonstrate why trusted instructions and untrusted observations require separate handling.
+### Run quality checks
 
-## Suggested evaluation metrics
+```bash
+python -m ruff check .
+python -m pytest --cov=siren_trap --cov-report=term-missing
+```
 
-| Metric | Meaning |
-|---|---|
-| Signal generation success | Valid artifact produced by the encoder |
-| Decode success | Receiver reconstructs the expected marker |
-| Canary observation rate | Agent exposes the marker in its observation/output |
-| Trust-boundary compliance | Agent explicitly treats marker content as untrusted data |
-| False-positive rate | Non-marker observations incorrectly classified |
-| Decoy interaction rate | Authorized test sessions access decoy resources |
+## Evaluation metrics
 
-## Security and privacy
+| Metric | What it measures | What it does not establish |
+|---|---|---|
+| Artifact generation | Encoder produced a non-empty artifact | Successful acoustic transmission |
+| Spectral band energy | Energy measured in the configured frequency band | Inaudibility or receiver compatibility |
+| Decode success | Receiver reconstructed the expected marker | Agent policy failure |
+| Canary observation rate | Marker appeared in evaluated observations | Unauthorized control of an agent |
+| Trust-boundary compliance | Agent treated the marker as untrusted data | General security of the agent |
+| False-positive rate | Non-marker input incorrectly matched | Coverage of all attack classes |
+| Decoy interaction rate | Requests reached the local decoy | Identity or intent of the requester |
 
-- Bind the service to `127.0.0.1` by default.
-- Do not expose the research server to the public internet without a separate security review.
-- Treat every external observation as untrusted data.
-- Never execute agent-supplied content.
-- Do not collect credentials, microphone recordings, or unrelated personal data.
-- Use only test agents and devices you own or are authorized to assess.
-- Keep generated WAV artifacts out of Git unless there is a specific, reviewed reason to commit them.
+## Security, privacy, and responsible use
 
-See [SECURITY.md](SECURITY.md), [Threat Model](docs/THREAT_MODEL.md), and [Research Methodology](docs/RESEARCH_METHODOLOGY.md).
+- Use only systems, devices, and environments you own or are explicitly authorized to test.
+- Keep the decoy service bound to `127.0.0.1` unless a reviewed deployment explicitly requires otherwise.
+- Treat all observations, HTTP input, decoded content, and telemetry fields as untrusted.
+- Never execute, evaluate, or automatically follow content supplied by an agent.
+- Do not use this project for stealthy delivery, unauthorized agent control, exploitation, persistence, credential theft, exfiltration, or service disruption.
+- Do not collect credentials, unrelated personal data, or raw microphone recordings.
+- Apply OS/container isolation and network egress controls to systems under test.
+- Keep generated recordings and experiment artifacts out of version control unless there is a specific, reviewed reason to include them.
 
-## Roadmap
+Read [SECURITY.md](SECURITY.md) before conducting experiments. Report suspected vulnerabilities privately through the repository's GitHub security reporting channel when available.
 
-- [x] Initial modular Python package
-- [x] Controlled canary generation interface
-- [x] Local decoy HTTP service
-- [x] Canary detection and JSONL telemetry
-- [x] Unit and integration test baseline
-- [ ] Hardware-specific acoustic compatibility matrix
-- [ ] Receiver-side decode validation across supported devices
-- [ ] Agent evaluation adapters and benchmark reports
-- [ ] Container isolation and deployment hardening
+## Project maturity
+
+Siren-Trap is an **alpha research prototype**. The current automated test suite validates selected software behavior; it does not certify physical-layer performance or production readiness.
+
+### Current roadmap
+
+- [x] Modular Python package and local decoy service
+- [x] Fixed canary generation interface
+- [x] Canary observation checks and JSONL telemetry
+- [x] Passive 18–20 kHz WAV analysis
+- [x] Automated lint and multi-version Python test workflow
+- [ ] Verified encoder/decoder round-trip across supported ggwave environments
+- [ ] Documented receiver and hardware compatibility matrix
+- [ ] Reproducible agent-evaluation adapters and benchmark reports
+- [ ] Independently reviewed isolated deployment profile
 
 ## Contributing
 
-Contributions should include tests, documentation, and a clear explanation of security impact. Review [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vulnerabilities privately according to [SECURITY.md](SECURITY.md).
+Focused contributions are welcome. Before opening a pull request:
 
-## License
+1. Review [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+2. Explain the problem, expected behavior, and security implications.
+3. Add regression tests for behavior changes.
+4. Run Ruff and the complete pytest suite.
+5. Document new dependencies, data collection, and operational requirements.
 
-MIT. See [LICENSE](LICENSE).
+Only defensive, authorized research contributions are in scope.
 
-<div align="center">
+## License and attribution
 
-**Siren-Trap — Securing the trust boundaries of multimodal AI.**
+Siren-Trap is distributed under the [MIT License](LICENSE).
 
-</div>
+**Copyright © 2026 ALY HUSSEIN FEKRY ZOPAIR.**
+
+The copyright and license notice must be preserved in copies or substantial portions of the software. See [AUTHORS.md](AUTHORS.md) for project attribution and [CITATION.cff](CITATION.cff) for citation metadata.
