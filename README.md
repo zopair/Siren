@@ -26,6 +26,10 @@ Siren-Trap is an open-source Python framework for defensive AI red teaming and m
 - [Architecture](docs/ARCHITECTURE.md) · [Threat model](docs/THREAT_MODEL.md) · [Research methodology](docs/RESEARCH_METHODOLOGY.md) · [Acoustic testing](docs/ACOUSTIC_TESTING.md)
 - [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Citation metadata](CITATION.cff)
 
+## Research & industry engagement
+
+See [OUTREACH.md](OUTREACH.md) for the project's research positioning, relevant industry destinations, and a respectful outreach plan. Mentions are limited to relevant contexts; no affiliation or endorsement is implied.
+
 ## Research objectives
 
 Multimodal agents may receive information through audio perception, transcription, retrieved documents, browsers, and external tools. Those inputs are data—not trusted instructions. Siren-Trap helps researchers study whether this boundary is preserved and record evidence at distinct stages of an experiment.
