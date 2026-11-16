@@ -30,6 +30,7 @@ def test_decoy_page_records_visit_and_exposes_research_scope(tmp_path):
     assert b'id="play"' in response.data
     assert b'id="status"' in response.data
     assert b"Authorized environments only" in response.data
+    assert b"Copyright \xc2\xa9 2026 ALY HUSSEIN FEKRY ZOPAIR" in response.data
     assert "DECOY_VISIT" in log_path.read_text(encoding="utf-8")
 
 
