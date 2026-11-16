@@ -31,7 +31,7 @@ From the repository root:
 
 ```bash
 python -m pytest tests/test_acoustic_frequencies.py
-python tests/test_acoustic_frequencies.py path/to/canary.wav
+python -m siren_trap.telemetry.acoustic_analysis path/to/canary.wav
 ```
 
 The script reports sample rate, analyzed duration, strongest scanned frequency in the 18–20 kHz band, band power, and sample RMS. It analyzes at most the first 0.5 seconds.
