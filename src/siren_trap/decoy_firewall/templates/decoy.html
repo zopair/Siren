@@ -4,42 +4,344 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>Siren-Trap Research Node</title>
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b1220">
+  <title>Siren-Trap | Local Research Node</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center;
-      background: #101522; color: #e8edf7; }
-    main { width: min(90%, 620px); padding: 2rem; border: 1px solid #34415c;
-      border-radius: 16px; background: #192235; text-align: center; }
-    h1 { color: #58b7ff; letter-spacing: .08em; }
-    button { padding: .8rem 1.2rem; border: 0; border-radius: 8px;
-      background: #147bd1; color: white; cursor: pointer; }
-    #status { color: #9baac4; min-height: 1.5em; }
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1220;
+      color: #e8eef8;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --surface: #111c2e;
+      --surface-raised: #16243a;
+      --line: #263750;
+      --muted: #9aabc2;
+      --accent: #71c7f3;
+      --accent-strong: #2d9ed8;
+      --green: #75d6ad;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 12% 0%, rgb(45 158 216 / 13%), transparent 38rem),
+        radial-gradient(ellipse at 100% 25%, rgb(117 214 173 / 7%), transparent 34rem),
+        #0b1220;
+    }
+
+    .shell { width: min(100% - 2rem, 1040px); margin: 0 auto; padding: 2rem 0 3rem; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { display: flex; align-items: center; gap: .85rem; }
+    .brand-mark {
+      display: grid;
+      width: 2.65rem;
+      height: 2.65rem;
+      place-items: center;
+      border: 1px solid #397ba0;
+      border-radius: .85rem;
+      background: linear-gradient(145deg, #193c58, #14243a);
+      color: var(--accent);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -.08em;
+    }
+    .brand-name { margin: 0; font-size: 1rem; font-weight: 750; letter-spacing: .02em; }
+    .brand-caption { margin: .2rem 0 0; color: var(--muted); font-size: .78rem; }
+
+    .scope-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .48rem .72rem;
+      border: 1px solid #285b4b;
+      border-radius: 999px;
+      background: rgb(29 91 69 / 17%);
+      color: #a6e8c9;
+      font-size: .76rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .scope-pill::before {
+      width: .45rem;
+      height: .45rem;
+      border-radius: 50%;
+      background: var(--green);
+      content: "";
+    }
+
+    .hero { padding: clamp(2.5rem, 7vw, 5rem) 0 2rem; max-width: 760px; }
+    .eyebrow {
+      margin: 0 0 .85rem;
+      color: var(--accent);
+      font-size: .74rem;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(2.1rem, 6vw, 4rem);
+      line-height: 1.04;
+      letter-spacing: -.055em;
+    }
+    .hero-copy { max-width: 660px; margin: 1.1rem 0 0; color: #b4c2d5; font-size: clamp(1rem, 2vw, 1.12rem); line-height: 1.75; }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 2rem 0 1rem;
+    }
+    .section-heading h2 { margin: 0; font-size: 1rem; letter-spacing: -.01em; }
+    .section-heading p { margin: 0; color: var(--muted); font-size: .8rem; }
+
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .9rem;
+    }
+    .metric {
+      min-height: 142px;
+      padding: 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: linear-gradient(155deg, rgb(22 36 58 / 96%), rgb(15 26 43 / 96%));
+    }
+    .metric-label { margin: 0; color: var(--muted); font-size: .76rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+    .metric-value { margin: .8rem 0 .35rem; color: #f1f6fd; font-size: 1.08rem; font-weight: 720; }
+    .metric-note { margin: 0; color: #9aabc2; font-size: .82rem; line-height: 1.5; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(250px, .85fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .panel {
+      padding: clamp(1.2rem, 3vw, 1.7rem);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: rgb(17 28 46 / 94%);
+    }
+    .panel h2 { margin: 0; font-size: 1.08rem; }
+    .panel-intro { margin: .55rem 0 1.4rem; color: var(--muted); font-size: .9rem; line-height: 1.65; }
+
+    button {
+      display: inline-flex;
+      min-height: 2.9rem;
+      align-items: center;
+      justify-content: center;
+      gap: .65rem;
+      padding: .78rem 1.05rem;
+      border: 1px solid #53b6e8;
+      border-radius: .7rem;
+      background: linear-gradient(135deg, #238ac4, #176da5);
+      color: white;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 720;
+      cursor: pointer;
+      transition: filter 150ms ease, transform 150ms ease;
+    }
+    button:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    button:focus-visible { outline: 3px solid #a5e1ff; outline-offset: 3px; }
+    button:active { transform: translateY(0); }
+
+    #status {
+      min-height: 2.8rem;
+      margin: 1rem 0 0;
+      padding: .75rem .85rem;
+      border: 1px solid #2b405b;
+      border-radius: .65rem;
+      background: #0c1728;
+      color: #b9c8da;
+      font-size: .84rem;
+      line-height: 1.5;
+    }
+    .status-label { display: block; margin-bottom: .25rem; color: var(--muted); font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+    .principles { display: grid; gap: 1rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+    .principles li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .65rem; color: #b9c8da; font-size: .86rem; line-height: 1.55; }
+    .principles li::before { color: var(--green); content: "✓"; font-weight: 800; }
+
+    .notice {
+      margin-top: 1rem;
+      padding: 1rem 1.1rem;
+      border: 1px solid #574a31;
+      border-radius: .85rem;
+      background: rgb(91 69 29 / 13%);
+      color: #d9c8a5;
+      font-size: .82rem;
+      line-height: 1.65;
+    }
+    .notice strong { color: #f0dfbb; }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .6rem 1rem;
+      margin-top: 2rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--line);
+      color: #7f91aa;
+      font-size: .76rem;
+    }
+
+    @media (max-width: 720px) {
+      .overview { grid-template-columns: 1fr; }
+      .metric { min-height: auto; }
+      .workspace { grid-template-columns: 1fr; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: .35rem; }
+    }
+    @media (max-width: 440px) {
+      .shell { width: min(100% - 1.25rem, 1040px); padding-top: 1.25rem; }
+      .brand-caption { max-width: 165px; }
+      .scope-pill { padding: .42rem .55rem; font-size: .68rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <h1>SIREN RESEARCH NODE</h1>
-    <p>Controlled multimodal security research environment.</p>
-    <p>Play the harmless acoustic canary only when you choose to.</p>
-    <button id="play" type="button">Play research signal</button>
-    <p id="status" role="status" aria-live="polite">Signal not played.</p>
-    <audio id="canary" preload="none">
-      <source src="/audio/canary.wav" type="audio/wav">
-    </audio>
-  </main>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Siren-Trap">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <p class="brand-name">SIREN-TRAP</p>
+          <p class="brand-caption">Defensive multimodal security research</p>
+        </div>
+      </div>
+      <span class="scope-pill">Local research node</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Research environment / 01</p>
+        <h1 id="page-title">Observe the boundary.<br>Keep control with the researcher.</h1>
+        <p class="hero-copy">
+          A controlled workspace for studying how authorized multimodal systems
+          receive a fixed acoustic marker, report observations, and preserve
+          the boundary between untrusted data and trusted instructions.
+        </p>
+      </section>
+
+      <section aria-labelledby="overview-title">
+        <div class="section-heading">
+          <h2 id="overview-title">Experiment overview</h2>
+          <p>Designed for explicit, local testing</p>
+        </div>
+        <div class="overview">
+          <article class="metric">
+            <p class="metric-label">Execution scope</p>
+            <p class="metric-value">Loopback-first</p>
+            <p class="metric-note">The service defaults to 127.0.0.1. No remote control plane.</p>
+          </article>
+          <article class="metric">
+            <p class="metric-label">Test artifact</p>
+            <p class="metric-value">Fixed canary</p>
+            <p class="metric-note">A harmless, non-executable marker. No arbitrary prompt input.</p>
+          </article>
+          <article class="metric">
+            <p class="metric-label">Observability</p>
+            <p class="metric-value">Structured events</p>
+            <p class="metric-note">Minimal JSONL records for local review and offline analysis.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Research controls and safeguards">
+        <article class="panel">
+          <h2>Manual signal playback</h2>
+          <p class="panel-intro">
+            Playback is initiated only by the researcher. Generate the local
+            canary WAV before starting this step.
+          </p>
+          <button id="play" type="button" aria-describedby="playback-help">
+            <span aria-hidden="true">▶</span>
+            Play research signal
+          </button>
+          <audio id="canary" preload="none">
+            <source src="/audio/canary.wav" type="audio/wav">
+          </audio>
+          <p id="status" role="status" aria-live="polite">
+            <span class="status-label">Playback status</span>
+            Ready. No signal has been played.
+          </p>
+          <p id="playback-help" class="metric-note">
+            If the artifact is unavailable, generate it with the documented
+            command in the repository README.
+          </p>
+        </article>
+
+        <aside class="panel">
+          <h2>Research safeguards</h2>
+          <ul class="principles">
+            <li>Untrusted observations are inspected, never executed.</li>
+            <li>The canary is fixed and inert by design.</li>
+            <li>Audio playback requires an explicit user action.</li>
+            <li>Measurements do not imply successful reception or decoding.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <aside class="notice" aria-label="Authorization notice">
+        <strong>Authorized environments only.</strong>
+        Use equipment and systems you own or are explicitly permitted to assess.
+        This research node is not a production containment boundary and must not
+        be exposed to untrusted networks without a separate security review.
+      </aside>
+    </main>
+
+    <footer>
+      <span>Siren-Trap · Alpha research prototype</span>
+      <span>Local-first · No third-party assets · No external telemetry</span>
+      <span>Copyright © 2026 ALY HUSSEIN FEKRY ZOPAIR</span>
+    </footer>
+  </div>
+
   <script>
     const button = document.getElementById("play");
     const audio = document.getElementById("canary");
     const status = document.getElementById("status");
+
     button.addEventListener("click", async () => {
+      status.textContent = "Requesting local canary audio…";
       try {
         audio.src = "/audio/canary.wav";
         await audio.play();
-        status.textContent = "Research signal playing.";
+        status.textContent = "Research signal is playing.";
       } catch {
-        status.textContent = "Playback unavailable. Check audio support.";
+        status.textContent =
+          "Playback unavailable. Generate the canary WAV and verify browser audio support.";
       }
+    });
+
+    audio.addEventListener("ended", () => {
+      status.textContent = "Playback complete. Review receiver-side evidence separately.";
+    });
+    audio.addEventListener("error", () => {
+      status.textContent = "Canary audio could not be loaded. Generate the local WAV artifact first.";
     });
   </script>
 </body>
