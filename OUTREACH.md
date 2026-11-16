@@ -82,7 +82,7 @@ Tag only the official company pages surfaced by LinkedIn's own page selector. Do
 
 **Suggested post**
 
-Open-source research: Siren-Trap explores defensive AI red teaming at the audio/multimodal trust boundary.
+Open-source research: @OpenAI and the multimodal AI research community — Siren-Trap explores defensive AI red teaming at the audio/multimodal trust boundary.
 
 Fixed inert canary • localhost-first decoy • controlled receiver tests • offline telemetry.
 
@@ -93,7 +93,7 @@ https://github.com/zopair/Siren
 
 **Optional targeted follow-up (not a mass-tag reply)**
 
-The audio side of this work may be relevant to NVIDIA's AI/audio developer community: the project separates artifact generation, controlled reception, decoding, and observation rather than treating a generated WAV as proof of end-to-end delivery. Research code and limitations: https://github.com/zopair/Siren
+@NVIDIAAI @NVIDIAAIDev — the audio side of this work may be relevant to NVIDIA's AI/audio developer community: the project separates artifact generation, controlled reception, decoding, and observation rather than treating a generated WAV as proof of end-to-end delivery. Research code and limitations: https://github.com/zopair/Siren
 
 Mention only a verified, directly relevant account when posting. NVIDIA's official social directory lists @NVIDIAAI and @NVIDIAAIDev for AI and developer news. Do not tag every organization in every post.
 
