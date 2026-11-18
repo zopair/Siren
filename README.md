@@ -1,5 +1,7 @@
 # Siren-Trap
 
+> **Preview:** [Local setup, demo scenario, acceptance checks, and known limits](PREVIEW.md).
+
 <div align="center">
 
 **Defensive Physical-Layer & Multimodal AI Security Research**
