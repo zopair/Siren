@@ -274,12 +274,18 @@ def main() -> None:
     (args.output_dir / "terminal.log").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
     )
-    terminal_html = """<!doctype html><html><head><meta charset="utf-8"><style>
-    body{background:#070b12;color:#b9f6ca;font:16px/1.65 ui-monospace,monospace;padding:34px}
-    pre{white-space:pre-wrap;overflow-wrap:anywhere}.bar{color:#ff657a}
-    </style></head><body><div class="bar">● ● ● &nbsp; siren-live-demo</div><pre>""" + html.escape(
-        (args.output_dir / "terminal.log").read_text(encoding="utf-8")
-    ) + "</pre></body></html>"
+    terminal_html = (
+        '<!doctype html><html><head><meta charset="utf-8"><style>'
+        'body { background: #070b12; color: #b9f6ca; '
+        'font: 16px/1.65 ui-monospace, monospace; padding: 34px; }'
+        'pre { white-space: pre-wrap; overflow-wrap: anywhere; }'
+        '.bar { color: #ff657a; }'
+        '</style></head><body><div class="bar">● ● ● &nbsp; siren-live-demo</div><pre>'
+        + html.escape(
+            (args.output_dir / "terminal.log").read_text(encoding="utf-8")
+        )
+        + "</pre></body></html>"
+    )
     (args.output_dir / "terminal_capture.html").write_text(
         terminal_html, encoding="utf-8"
     )
