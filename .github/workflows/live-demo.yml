@@ -4,7 +4,8 @@ on:
   push:
     branches: ["feat/siren-sentinel-poc"]
     paths:
-      - "benchmarks/**"
+      - "benchmarks/run_live_demo.py"
+      - "benchmarks/README.md"
       - "tests/**"
       - "src/siren_trap/**"
       - ".github/workflows/live-demo.yml"
@@ -20,6 +21,7 @@ concurrency:
 
 jobs:
   live-visual-demo:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, 'publish generated Siren demo evidence')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -40,6 +42,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]" playwright
           python -m playwright install --with-deps chromium
+
+      - name: Format, lint, and test demo implementation
+        run: |
+          python -m ruff check --fix benchmarks/run_live_demo.py tests/unit/test_live_demo.py
+          python -m ruff format benchmarks/run_live_demo.py tests/unit/test_live_demo.py
+          python -m ruff check .
+          python -m pytest
 
       - name: Execute reference experiment
         run: python benchmarks/run_live_demo.py --output-dir benchmarks/results
@@ -85,11 +94,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add benchmarks/results/evidence_report.json benchmarks/results/evidence_report.html \
+          git add benchmarks/run_live_demo.py tests/unit/test_live_demo.py benchmarks/results/evidence_report.json benchmarks/results/evidence_report.html \
             benchmarks/results/event_timeline.jsonl benchmarks/results/terminal.log \
             docs/assets/screenshots/terminal_demo.png docs/assets/screenshots/evidence_report.png
           if ! git diff --cached --quiet; then
-            git commit -m "chore: publish generated Siren demo evidence [skip ci]"
+            git commit -m "chore: publish generated Siren demo evidence"
             git push origin "HEAD:${{ github.ref_name }}"
           fi
 

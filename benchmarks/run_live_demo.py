@@ -256,7 +256,6 @@ def run_experiment(output_dir: Path, *, emit=print) -> dict[str, Any]:
          + " · Authorization=" + report["verdicts"]["authorization"]
          + " · Causal=" + report["verdicts"]["causal_evidence"])
     emit("[DONE] HTML, JSON, and JSONL evidence reports generated.")
-    terminal_path.write_text("\n".join(_TERMINAL_LINES) + "\n", encoding="utf-8") if False else None
     return report
 
 
