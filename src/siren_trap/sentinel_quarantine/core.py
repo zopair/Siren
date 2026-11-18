@@ -89,7 +89,10 @@ class SentinelQuarantine:
         self, session_id: str, trigger: TriggerReason
     ) -> EnforcementResult:
         """Apply every external control once and persist the resulting state."""
-        if not isinstance(session_id, str) or not self._SESSION_ID.fullmatch(session_id):
+        if (
+            not isinstance(session_id, str)
+            or not self._SESSION_ID.fullmatch(session_id)
+        ):
             raise ValueError("session_id must be a bounded opaque identifier.")
         if not isinstance(trigger, TriggerReason):
             raise TypeError("trigger must be a TriggerReason.")

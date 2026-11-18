@@ -66,10 +66,18 @@ def test_counterfactual_detects_configuration_drift():
     )
 
     def execute(condition, run_config):
-        return {"configuration_fingerprint": "unexpected" if condition is RunCondition.TREATMENT else config.fingerprint}
+        fingerprint = (
+            "unexpected"
+            if condition is RunCondition.TREATMENT
+            else config.fingerprint
+        )
+        return {"configuration_fingerprint": fingerprint}
 
     results = run_counterfactual(config, execute, reset=lambda: None)
-    assert not next(r for r in results if r.condition is RunCondition.TREATMENT).configuration_valid
+    treatment = next(
+        result for result in results if result.condition is RunCondition.TREATMENT
+    )
+    assert not treatment.configuration_valid
 
 
 def test_report_keeps_integrity_authorization_and_causality_independent():

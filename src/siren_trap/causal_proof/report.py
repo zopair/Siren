@@ -34,7 +34,8 @@ def build_evidence_report(
         },
         "limitations": [
             "A tool invocation alone does not establish dispatch, receipt, or effect.",
-            "Counterfactual evidence supports bounded causal inference, not access to model reasoning.",
+            "Counterfactual evidence supports bounded causal inference, not access "
+            "to model reasoning.",
             "External effects require independent receiver-side confirmation.",
         ],
     }
