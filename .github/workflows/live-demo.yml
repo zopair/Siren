@@ -45,8 +45,8 @@ jobs:
 
       - name: Format, lint, and test demo implementation
         run: |
-          python -m ruff check --fix benchmarks/run_live_demo.py tests/unit/test_live_demo.py
           python -m ruff format benchmarks/run_live_demo.py tests/unit/test_live_demo.py
+          python -m ruff check --fix benchmarks/run_live_demo.py tests/unit/test_live_demo.py
           python -m ruff check .
           python -m pytest
 
