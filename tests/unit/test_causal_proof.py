@@ -11,15 +11,10 @@ from siren_trap.causal_proof import (
 
 def test_effect_levels_do_not_infer_receipt_from_dispatch():
     evidence = ActionEvidence(
-        action_id="a1",
-        authorization_id="auth-1",
-        source_id="web-1",
-        attempted=True,
-        dispatched=True,
-        receiver_received=False,
+        action_id="a1", authorization_id="auth-1", source_id="web-1",
+        attempted=True, dispatched=True, receiver_received=False,
         effect_confirmed=False,
     )
-
     assert evidence.effect_level is EffectLevel.DISPATCHED
 
 
@@ -36,38 +31,34 @@ def test_event_reconstruction_links_authorization_source_and_action():
          "event_type": "SOURCE_OBSERVED",
          "details": {"source_id": "web-1", "trust": "untrusted"}},
     ]
-
     timeline = reconstruct_events(events)
-
     assert [item["event_id"] for item in timeline] == ["1", "2", "3"]
     assert timeline[-1]["details"]["authorization_id"] == "auth-1"
 
 
-def test_counterfactual_runs_three_conditions_with_only_source_removed():
+def test_counterfactual_runs_three_conditions_with_identical_controlled_config():
     config = ExperimentConfig(
-        experiment_id="exp-1",
-        model="test-model",
-        model_version="v1",
-        toolset=("read_report",),
-        authorization_fingerprint="auth-sha",
+        experiment_id="exp-1", model="test-model", model_version="v1",
+        toolset=("read_report",), authorization_fingerprint="auth-sha",
         dataset_fingerprint="data-sha",
     )
     seen = []
+    fingerprint = config.fingerprint
 
     def execute(condition, run_config):
         seen.append((condition, run_config.source_removed))
-        return {"action": "external_send" if condition is RunCondition.TREATMENT else "summarize"}
+        return {"configuration_fingerprint": fingerprint, "action": condition.value}
 
-    results = run_counterfactual(config, execute)
-
+    results = run_counterfactual(config, execute, reset=lambda: None)
     assert {item.condition for item in results} == set(RunCondition)
     assert len(seen) == 3
     assert seen.count((RunCondition.COUNTERFACTUAL, True)) == 1
     assert seen.count((RunCondition.BASELINE, False)) == 1
     assert seen.count((RunCondition.TREATMENT, False)) == 1
+    assert all(item.configuration_valid for item in results)
 
 
-def test_counterfactual_rejects_config_drift_between_conditions():
+def test_counterfactual_detects_configuration_drift():
     config = ExperimentConfig(
         experiment_id="exp-2", model="m", model_version="v1",
         toolset=("tool",), authorization_fingerprint="auth",
@@ -75,13 +66,10 @@ def test_counterfactual_rejects_config_drift_between_conditions():
     )
 
     def execute(condition, run_config):
-        if condition is RunCondition.TREATMENT:
-            return {"model": "changed"}
-        return {"model": "same"}
+        return {"configuration_fingerprint": "unexpected" if condition is RunCondition.TREATMENT else config.fingerprint}
 
-    results = run_counterfactual(config, execute)
-
-    assert all(not result.configuration_valid for result in results)
+    results = run_counterfactual(config, execute, reset=lambda: None)
+    assert not next(r for r in results if r.condition is RunCondition.TREATMENT).configuration_valid
 
 
 def test_report_keeps_integrity_authorization_and_causality_independent():
@@ -91,24 +79,18 @@ def test_report_keeps_integrity_authorization_and_causality_independent():
         effect_confirmed=False,
     )
     report = build_evidence_report(
-        experiment_id="exp-3",
-        actions=[action],
-        integrity_valid=True,
-        authorization_violation=True,
-        causal_evidence_supported=False,
+        experiment_id="exp-3", actions=[action], integrity_valid=True,
+        authorization_violation=True, causal_evidence_supported=False,
     )
-
     assert report["actions"][0]["effect_level"] == "RECEIVED"
     assert report["verdicts"] == {
-        "integrity": "PASS",
-        "authorization": "VIOLATION",
+        "integrity": "PASS", "authorization": "VIOLATION",
         "causal_evidence": "INSUFFICIENT",
     }
 
 
 def test_effect_confirmed_requires_received_evidence():
     import pytest
-
     with pytest.raises(ValueError):
         ActionEvidence(
             action_id="a2", authorization_id="auth", source_id="source",
