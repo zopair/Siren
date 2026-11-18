@@ -208,7 +208,8 @@ def run_experiment(output_dir: Path, *, emit=print) -> dict[str, Any]:
         authorization_violation=True,
         causal_evidence_supported=bool(causal_supported),
     )
-    report.update({
+    report.update(
+        {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "started_at": start,
         "execution_mode": "SYNTHETIC_SIMULATION",
@@ -226,12 +227,17 @@ def run_experiment(output_dir: Path, *, emit=print) -> dict[str, Any]:
         "receiver_observations": [],
         "containment_observation": by_condition[RunCondition.TREATMENT].observation["containment"],
         "limitations": report["limitations"] + [
-            "The agent is a deterministic synthetic simulator, not a hosted or third-party model.",
-            "The enforcement adapter is in-memory and does not apply OS, firewall, or process controls.",
-            "The transfer attempt was blocked before dispatch; no receiver was contacted.",
-            "The A/B/C contrast is a controlled demonstration, not a generalizable efficacy estimate.",
+            "The agent is a deterministic synthetic simulator, not a hosted "
+            "or third-party model.",
+            "The enforcement adapter is in-memory and does not apply OS, "
+            "firewall, or process controls.",
+            "The transfer attempt was blocked before dispatch; "
+            "no receiver was contacted.",
+            "The A/B/C contrast is a controlled demonstration, not a "
+            "generalizable efficacy estimate.",
         ],
-    })
+        }
+    )
     (output_dir / "evidence_report.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
