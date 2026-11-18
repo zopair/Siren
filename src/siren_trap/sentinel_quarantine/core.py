@@ -129,6 +129,14 @@ class SentinelQuarantine:
             self._results[session_id] = result
             return result
 
+    def on_lure_interaction(self, session_id: str) -> EnforcementResult:
+        """Contain the session immediately after a trusted lure-access signal."""
+        return self.contain(session_id, TriggerReason.LURE_INTERACTION)
+
+    def on_authorization_violation(self, session_id: str) -> EnforcementResult:
+        """Contain the session immediately after a policy-engine violation."""
+        return self.contain(session_id, TriggerReason.AUTHORIZATION_VIOLATION)
+
     def get_status(self, session_id: str) -> EnforcementResult | None:
         """Return the last recorded local result; no enforcement is implied."""
         with self._lock:
