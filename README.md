@@ -352,69 +352,49 @@ A file-based decoy or an instruction asking an agent to stop is not sufficient c
 
 ## 5.1 Containment principles
 
-The implementation is designed around these principles:
+The batch-2 Sentinel controller coordinates four controls through an injected
+external enforcement adapter:
 
-1. Enforcement outside the agent's decision-making process.
-2. Explicit session and execution boundaries.
-3. Deny-by-default access to real resources.
-4. Controlled tool invocation.
-5. Restricted network egress.
-6. Synthetic decoy data only.
-7. Auditable containment decisions.
-8. Defined handling of delegated and child sessions.
+1. Revoke the agent session's broker-issued capabilities.
+2. Block outbound egress at the host/network boundary.
+3. Contain delegated tools and child sessions.
+4. Apply the quarantine execution boundary.
 
-## 5.2 Intended containment workflow
+The controller executes outside the agent's decision loop, attempts all controls
+even when one fails, and records each result. It reports `CONTAINED` only when
+all four controls explicitly confirm success; otherwise it reports
+`PARTIALLY_CONTAINED`.
 
-```mermaid
-sequenceDiagram
-    participant A as Autonomous Agent
-    participant L as Siren Lure
-    participant S as Sentinel Gateway
-    participant Q as Quarantine
-    participant R as Controlled Receiver
-    participant T as Telemetry
+## 5.2 Enforcement boundary — important limitation
 
-    A->>L: Interact with decoy resource
-    L->>T: Record lure interaction
-    L->>S: Submit captured action
-    S->>S: Validate session boundary
-    S->>Q: Route into isolated environment
-    Q->>Q: Apply restricted execution policy
-    Q->>R: Optional controlled test request
-    R->>T: Record received request
-    Q->>T: Record containment events
-    T->>T: Preserve evidence
-```
+The repository implements the enforcement orchestration contract and its tests.
+It does **not** ship a privileged host adapter that creates network namespaces,
+firewall rules, kills process trees, or moves arbitrary third-party agents into
+a kernel-enforced sandbox. Those capabilities depend on the host runtime and
+its privileges and must be supplied by a deployment-specific adapter.
 
-## 5.3 Isolation boundaries
+Therefore, the current PoC must not be represented as providing universal,
+production-grade process or network isolation. See
+[Containment Model](docs/CONTAINMENT_MODEL.md) for the adapter contract and
+uncovered paths.
 
-The intended containment environment must not provide:
+## 5.3 Trigger integration
 
-- Access to production files.
-- Real credentials or API keys.
-- Unrestricted outbound network access.
-- Unrestricted host filesystem access.
-- Access to real customer data.
-- A route back into the original privileged execution environment.
+Trusted host integrations call `on_lure_interaction(session_id)` when the
+authenticated agent session opens a Siren lure, or
+`on_authorization_violation(session_id)` when the policy enforcement point
+detects an out-of-scope action. Session identity must come from the trusted
+agent gateway, never from an unauthenticated request header or lure content.
 
-The design must explicitly document which execution channels are covered.
+## 5.4 Isolation boundaries
 
-A session is not considered fully contained merely because one tool call has been blocked.
+The deployment adapter must prove that no production files, credentials,
+customer data, unrestricted egress, or privileged return path are available
+inside quarantine. Delegated children must be enumerated and contained; if
+completeness cannot be confirmed, the adapter must return false.
 
-Delegated tools, child agents, background tasks, existing network connections, and other execution paths must be evaluated against the actual enforcement boundary.
-
-## 5.4 Honest containment reporting
-
-Siren distinguishes:
-
-- `CONTAINED`: The monitored execution path was successfully isolated.
-- `PARTIALLY_CONTAINED`: Some execution paths remain outside the verified boundary.
-- `NOT_CONTAINED`: The required isolation could not be established.
-- `UNKNOWN`: Available telemetry is insufficient to determine the outcome.
-
-A successful containment event must be supported by observable enforcement evidence.
-
-> **Batch-1 status:** The Sentinel package and containment model are scaffolds only. No active session isolation is implemented or claimed yet. See [Containment Model](docs/CONTAINMENT_MODEL.md).
+In-flight traffic and unobserved egress paths remain outside the guarantee
+unless the host adapter controls them.
 
 ---
 
