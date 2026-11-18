@@ -321,6 +321,13 @@ Potential inputs include:
 
 The purpose is to investigate whether different modalities influence the same unauthorized behavior.
 
+## 4.6 Multimodal Lure Integration
+
+The semantic catalog is paired with the existing fixed `ggwave` acoustic
+canary through `siren_lure.generate_acoustic_lure()`. This adapter preserves
+the original fixed marker, accepts no arbitrary payload text, and writes the
+same WAV artifact served by the existing Flask audio route.
+
 ## 4.7 Implemented interfaces
 
 The first delivery batch provides:
