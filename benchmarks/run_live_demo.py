@@ -8,10 +8,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
-import sys
-from contextlib import redirect_stdout
 from datetime import datetime, timezone
-from io import StringIO
 from pathlib import Path
 from typing import Any
 
