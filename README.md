@@ -1,5 +1,7 @@
 # Siren-Trap
 
+> **Preview:** [Local setup, demo scenario, acceptance checks, and known limits](PREVIEW.md).
+
 <div align="center">
 
 **Defensive Physical-Layer & Multimodal AI Security Research**
@@ -264,3 +266,9 @@ Siren-Trap is distributed under the [MIT License](LICENSE).
 **Copyright © 2026 ALY HUSSEIN FEKRY ZOPAIR.**
 
 The copyright and license notice must be preserved in copies or substantial portions of the software. See [AUTHORS.md](AUTHORS.md) for project attribution and [CITATION.cff](CITATION.cff) for citation metadata.
+
+## Enterprise Project Overview
+
+<video controls playsinline preload="metadata" width="100%"><source src="https://raw.githubusercontent.com/zopair/Siren/feat/enterprise-showcase-video/assets/marketing/project-overview.mp4" type="video/mp4">Your browser does not support embedded video. [Open the MP4](https://raw.githubusercontent.com/zopair/Siren/feat/enterprise-showcase-video/assets/marketing/project-overview.mp4).</video>
+
+[Watch the English project overview](VIDEO.md) · [Open the project repository](https://github.com/zopair/Siren)

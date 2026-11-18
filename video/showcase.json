@@ -1,0 +1,36 @@
+{
+  "name": "Siren-Trap",
+  "tag": "Defensive AI Security Research",
+  "url": "https://github.com/zopair/Siren",
+  "accent": [
+    255,
+    176,
+    82
+  ],
+  "scenes": [
+    {
+      "title": "A new trust boundary",
+      "narration": "AI systems increasingly interpret content from audio, files, and external services. Security teams need controlled ways to study how untrusted inputs are perceived and handled."
+    },
+    {
+      "title": "A defensive research framework",
+      "narration": "Siren-Trap is an open-source Python research prototype for defensive AI red teaming and multimodal security evaluation, using controlled acoustic test artifacts and inert canary markers."
+    },
+    {
+      "title": "Observe, measure, evaluate",
+      "narration": "The framework combines fixed canary generation, a localhost-first instrumented decoy service, structured telemetry, and passive analysis of recorded WAV files in a defined frequency band."
+    },
+    {
+      "title": "Controlled experiments",
+      "narration": "The design favors inert test markers, bounded observations, and explicit authorization. The analyzer measures signal energy; it does not transmit audio, execute agent instructions, or prove that an agent can be controlled."
+    },
+    {
+      "title": "Research value",
+      "narration": "Security researchers can use the framework to structure repeatable experiments, inspect trust-boundary behavior, and collect evidence that helps teams evaluate defensive handling of multimodal inputs."
+    },
+    {
+      "title": "Alpha research prototype",
+      "narration": "Siren-Trap does not certify physical-layer performance or production containment. Hardware compatibility, verified end-to-end decoding, and reproducible benchmark adapters remain to be completed. Read the threat model and responsible-use guidance on GitHub."
+    }
+  ]
+}
