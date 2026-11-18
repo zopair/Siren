@@ -9,6 +9,8 @@ from pathlib import Path
 
 from flask import Flask, jsonify, render_template, send_from_directory
 
+from siren_trap.siren_lure.flask_tools import create_lure_blueprint
+from siren_trap.siren_lure.engine import SemanticLureEngine
 from siren_trap.telemetry.event_logger import JsonlEventLogger
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -19,12 +21,16 @@ def create_app(
     *,
     audio_dir: Path | None = None,
     event_logger: JsonlEventLogger | None = None,
+    lure_engine: SemanticLureEngine | None = None,
 ) -> Flask:
     """Create the Flask app with injectable paths for deterministic tests."""
     app = Flask(__name__, template_folder="templates")
     selected_audio_dir = audio_dir or AUDIO_DIR
     logger = event_logger or JsonlEventLogger(
         Path(os.getenv("SIREN_LOG_DIR", "logs")) / "events.jsonl"
+    )
+    app.register_blueprint(
+        create_lure_blueprint(engine=lure_engine, event_logger=logger)
     )
 
     @app.after_request
