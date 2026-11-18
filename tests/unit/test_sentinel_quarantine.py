@@ -1,9 +1,11 @@
+import pytest
+
 from siren_trap.sentinel_quarantine import (
     ContainmentStatus,
-    EnforcementResult,
     SentinelQuarantine,
     TriggerReason,
 )
+from siren_trap.telemetry.event_logger import JsonlEventLogger
 
 
 class FakeEnforcer:
@@ -31,9 +33,16 @@ class FakeEnforcer:
         return self.isolate
 
 
+def make_sentinel(tmp_path, enforcer):
+    return SentinelQuarantine(
+        enforcer,
+        event_logger=JsonlEventLogger(tmp_path / "events.jsonl"),
+    )
+
+
 def test_quarantine_requires_every_external_enforcement_control(tmp_path):
     enforcer = FakeEnforcer()
-    sentinel = SentinelQuarantine(enforcer, event_log_path=tmp_path / "events.jsonl")
+    sentinel = make_sentinel(tmp_path, enforcer)
 
     result = sentinel.contain("session-1", TriggerReason.LURE_INTERACTION)
 
@@ -50,9 +59,7 @@ def test_quarantine_requires_every_external_enforcement_control(tmp_path):
 
 
 def test_missing_egress_control_is_only_partially_contained(tmp_path):
-    sentinel = SentinelQuarantine(
-        FakeEnforcer(egress=False), event_log_path=tmp_path / "events.jsonl"
-    )
+    sentinel = make_sentinel(tmp_path, FakeEnforcer(egress=False))
 
     result = sentinel.contain("session-2", TriggerReason.AUTHORIZATION_VIOLATION)
 
@@ -65,7 +72,7 @@ def test_exception_from_control_fails_closed_and_records_partial_state(tmp_path)
         def block_egress(self, session_id):
             raise OSError("firewall adapter unavailable")
 
-    sentinel = SentinelQuarantine(Broken(), event_log_path=tmp_path / "events.jsonl")
+    sentinel = make_sentinel(tmp_path, Broken())
     result = sentinel.contain("session-3", TriggerReason.LURE_INTERACTION)
 
     assert result.status is ContainmentStatus.PARTIALLY_CONTAINED
@@ -75,7 +82,7 @@ def test_exception_from_control_fails_closed_and_records_partial_state(tmp_path)
 
 def test_repeat_trigger_returns_existing_containment_result(tmp_path):
     enforcer = FakeEnforcer()
-    sentinel = SentinelQuarantine(enforcer, event_log_path=tmp_path / "events.jsonl")
+    sentinel = make_sentinel(tmp_path, enforcer)
 
     first = sentinel.contain("session-4", TriggerReason.LURE_INTERACTION)
     second = sentinel.contain("session-4", TriggerReason.AUTHORIZATION_VIOLATION)
@@ -85,9 +92,7 @@ def test_repeat_trigger_returns_existing_containment_result(tmp_path):
 
 
 def test_child_sessions_are_part_of_containment_decision(tmp_path):
-    sentinel = SentinelQuarantine(
-        FakeEnforcer(children=False), event_log_path=tmp_path / "events.jsonl"
-    )
+    sentinel = make_sentinel(tmp_path, FakeEnforcer(children=False))
 
     result = sentinel.contain("session-5", TriggerReason.LURE_INTERACTION)
 
@@ -96,11 +101,7 @@ def test_child_sessions_are_part_of_containment_decision(tmp_path):
 
 
 def test_invalid_session_identifier_is_rejected(tmp_path):
-    sentinel = SentinelQuarantine(
-        FakeEnforcer(), event_log_path=tmp_path / "events.jsonl"
-    )
-
-    import pytest
+    sentinel = make_sentinel(tmp_path, FakeEnforcer())
 
     with pytest.raises(ValueError):
         sentinel.contain("../session", TriggerReason.LURE_INTERACTION)
