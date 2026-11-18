@@ -39,3 +39,30 @@ not record raw task context or secrets.
 
 Never label a session fully contained based only on an agent instruction, a
 tool response, a process-local flag, or a successful call to one control.
+
+## Control-plane integration example
+
+The following is the minimal shape of a deployment-owned adapter. Each method
+must call the host's actual session broker, network policy controller, child
+process supervisor, and quarantine runtime; returning `True` is an assertion
+that the control was independently verified, not merely requested.
+
+```python
+from pathlib import Path
+
+from siren_trap.sentinel_quarantine import SentinelQuarantine
+from siren_trap.telemetry.event_logger import JsonlEventLogger
+
+controller = SentinelQuarantine(
+    host_enforcement_adapter,
+    event_logger=JsonlEventLogger(Path("logs/sentinel.jsonl")),
+)
+
+result = controller.on_lure_interaction(authenticated_agent_session_id)
+if result.status.value != "CONTAINED":
+    raise RuntimeError("Session remains partially contained; escalate host controls.")
+```
+
+`host_enforcement_adapter` and `authenticated_agent_session_id` are supplied
+by the deployment gateway. Siren intentionally does not fabricate a host-level
+adapter or trust a session identifier supplied by the agent itself.
