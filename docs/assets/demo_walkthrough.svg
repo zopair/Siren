@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+<title id="title">Siren live demo walkthrough</title><desc id="desc">Animated five-stage synthetic laboratory walkthrough: attract, capture, isolate, investigate, prove.</desc>
+<defs>
+  <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#080d19"/><stop offset="1" stop-color="#17233b"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <style>
+    text{font-family:Inter,Arial,sans-serif;fill:#edf3ff}.muted{fill:#9eafc9;font-size:17px}
+    .node{fill:#121e33;stroke:#425777;stroke-width:2}.active{stroke:#ff5268;stroke-width:4;filter:url(#glow)}
+    .pulse{animation:pulse 5s infinite}.p1{animation-delay:0s}.p2{animation-delay:1s}.p3{animation-delay:2s}.p4{animation-delay:3s}.p5{animation-delay:4s}
+    @keyframes pulse{0%,15%,100%{stroke:#425777;filter:none}5%,12%{stroke:#ff5268;filter:url(#glow)}}
+    .dash{stroke-dasharray:10 10;animation:flow 2s linear infinite}
+    @keyframes flow{to{stroke-dashoffset:-40}}
+  </style>
+</defs>
+<rect width="1200" height="520" rx="24" fill="url(#bg)"/>
+<text x="56" y="70" font-size="18" letter-spacing="5" fill="#ff7184">SIREN · LIVE VISUAL WALKTHROUGH</text>
+<text x="56" y="120" font-size="34" font-weight="700">Attract → Capture → Isolate → Investigate → Prove</text>
+<text x="56" y="158" class="muted">Synthetic agent simulator · local-only evidence · no external network</text>
+<g stroke="#7187aa" stroke-width="3" fill="none" class="dash">
+<path d="M250 285 H310"/><path d="M470 285 H530"/><path d="M690 285 H750"/><path d="M910 285 H970"/>
+</g>
+<g>
+<rect class="node pulse p1" x="70" y="220" width="180" height="130" rx="16"/>
+<text x="160" y="270" text-anchor="middle" font-size="22" font-weight="700">01 ATTRACT</text><text x="160" y="305" text-anchor="middle" class="muted">Semantic lure</text>
+<rect class="node pulse p2" x="310" y="220" width="160" height="130" rx="16"/>
+<text x="390" y="270" text-anchor="middle" font-size="22" font-weight="700">02 CAPTURE</text><text x="390" y="305" text-anchor="middle" class="muted">Canary event</text>
+<rect class="node pulse p3" x="530" y="220" width="160" height="130" rx="16"/>
+<text x="610" y="270" text-anchor="middle" font-size="22" font-weight="700">03 ISOLATE</text><text x="610" y="305" text-anchor="middle" class="muted">Simulated Sentinel</text>
+<rect class="node pulse p4" x="750" y="220" width="160" height="130" rx="16"/>
+<text x="830" y="270" text-anchor="middle" font-size="22" font-weight="700">04 INVESTIGATE</text><text x="830" y="305" text-anchor="middle" class="muted">A / B / C runs</text>
+<rect class="node pulse p5" x="970" y="220" width="160" height="130" rx="16"/>
+<text x="1050" y="270" text-anchor="middle" font-size="22" font-weight="700">05 PROVE</text><text x="1050" y="305" text-anchor="middle" class="muted">Evidence report</text>
+</g>
+<rect x="70" y="400" width="1060" height="66" rx="12" fill="#251925" stroke="#74374a"/>
+<text x="600" y="428" text-anchor="middle" font-size="18" font-weight="700" fill="#ff8b9c">LAB LIMITATION</text>
+<text x="600" y="451" text-anchor="middle" class="muted">In-memory simulated controls are not OS / firewall / process isolation.</text>
+</svg>

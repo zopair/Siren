@@ -21,7 +21,7 @@ Instead of merely detecting suspicious interactions, Siren investigates whether 
 
 Siren combines its existing acoustic research foundation with a modular architecture for semantic lures, containment, telemetry, and experimental evidence.
 
-> **Project status:** Research PoC under active development. The existing acoustic and decoy components are the foundation. The semantic lure engine and read-only MCP/Flask lure tools are now implemented on this branch. External session containment, causal analysis, and the integrated benchmark workflow remain development targets—not capabilities claimed to be fully implemented.
+> **Project status:** Research PoC. Semantic lure tools, Sentinel's fail-closed enforcement contract, causal evidence primitives, and the synthetic A/B/C visual benchmark are implemented on this branch. Host-level process/network isolation still requires a deployment-owned enforcement adapter; the live demo uses an in-memory simulator and makes no production-containment claim.
 
 ---
 
@@ -41,11 +41,12 @@ Siren combines its existing acoustic research foundation with a modular architec
 - [12. Quick Start](#12-quick-start)
 - [13. Research Roadmap](#13-research-roadmap)
 - [14. Security and Responsible Research](#14-security-and-responsible-research)
-- [15. Demonstration Scenario](#15-demonstration-scenario)
-- [16. Research Limitations](#16-research-limitations)
-- [17. Contributing](#17-contributing)
-- [18. License](#18-license)
-- [19. Intellectual Property and Authorship](#19-intellectual-property-and-authorship)
+- [15. Live Visual Walkthrough](#15-live-visual-walkthrough)
+- [16. Demonstration Scenario](#16-demonstration-scenario)
+- [17. Research Limitations](#17-research-limitations)
+- [18. Contributing](#18-contributing)
+- [19. License](#19-license)
+- [20. Intellectual Property and Authorship](#20-intellectual-property-and-authorship)
 
 ---
 
@@ -927,7 +928,45 @@ See `SECURITY.md` and `docs/THREAT_MODEL.md` for the detailed security assumptio
 
 ---
 
-# 15. Demonstration Scenario
+# 15. Live Visual Walkthrough
+
+The automated GitHub Actions workflow runs the deterministic synthetic
+reference experiment, renders the captured terminal transcript and evidence
+report in headless Chromium, and publishes the resulting screenshots and
+machine-readable evidence on this feature branch.
+
+<p align="center">
+  <img src="docs/assets/demo_walkthrough.svg" alt="Animated Siren five-stage synthetic demo walkthrough" width="100%">
+</p>
+
+### Automated run captures
+
+<p align="center">
+  <img src="docs/assets/screenshots/terminal_demo.png" alt="Headless Chromium screenshot of the Siren terminal demo transcript" width="49%">
+  <img src="docs/assets/screenshots/evidence_report.png" alt="Headless Chromium screenshot of the generated evidence report" width="49%">
+</p>
+
+Generated outputs:
+- [Interactive evidence report](benchmarks/results/evidence_report.html)
+- [Machine-readable evidence](benchmarks/results/evidence_report.json)
+- [Event timeline (JSONL)](benchmarks/results/event_timeline.jsonl)
+- [Terminal transcript](benchmarks/results/terminal.log)
+- [Live Demo workflow and downloadable artifact bundle](https://github.com/zopair/Siren/actions/workflows/live-demo.yml)
+
+**Evidence boundary:** the agent and enforcement adapter are deterministic
+in-process simulators. The captured PNGs are real Chromium screenshots of the
+terminal transcript and generated HTML report, not photographs of a physical
+terminal. The transfer is recorded as ATTEMPTED and blocked before dispatch;
+no external receiver is contacted. The demo does not prove OS/firewall/process
+isolation or production containment.
+
+Run locally with `python benchmarks/run_live_demo.py`. GitHub Actions uploads
+the generated HTML, JSON, JSONL, terminal transcript, screenshots, and SVG
+walkthrough as a 30-day build artifact.
+
+---
+
+# 16. Demonstration Scenario
 
 ## Suggested 60-Second Research Demonstration
 
@@ -982,7 +1021,7 @@ Use directional arrows and visibly separate the agent's original environment fro
 
 ---
 
-# 16. Research Limitations
+# 17. Research Limitations
 
 Siren is an experimental architecture.
 
@@ -1005,7 +1044,7 @@ Containment claims must be limited to the execution paths actually enforced and 
 
 ---
 
-# 17. Contributing
+# 18. Contributing
 
 Contributions are welcome in areas including:
 
@@ -1031,7 +1070,7 @@ See `CONTRIBUTING.md` for contribution guidelines.
 
 ---
 
-# 18. License
+# 19. License
 
 Siren is distributed under the MIT License.
 
@@ -1041,7 +1080,7 @@ Third-party libraries and tools remain subject to their respective licenses.
 
 ---
 
-# 19. Intellectual Property and Authorship
+# 20. Intellectual Property and Authorship
 
 ## Independent Research and Development
 
