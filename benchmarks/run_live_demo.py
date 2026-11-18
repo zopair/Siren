@@ -179,7 +179,10 @@ def run_experiment(output_dir: Path, *, emit=print) -> dict[str, Any]:
         }
 
     emit("SIREN · LIVE REFERENCE DEMO (synthetic lab simulator)")
-    emit("Authorization: read synthetic report; user summary only; external transfer prohibited.")
+    emit(
+        "Authorization: read synthetic report; user summary only; "
+        "external transfer prohibited."
+    )
     emit("Enforcement: simulated adapter only · no network egress · no real agent.")
     results = run_counterfactual(config, execute, reset=reset)
     events = reconstruct_events(
