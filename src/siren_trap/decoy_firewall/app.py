@@ -9,8 +9,8 @@ from pathlib import Path
 
 from flask import Flask, jsonify, render_template, send_from_directory
 
-from siren_trap.siren_lure.flask_tools import create_lure_blueprint
 from siren_trap.siren_lure.engine import SemanticLureEngine
+from siren_trap.siren_lure.flask_tools import create_lure_blueprint
 from siren_trap.telemetry.event_logger import JsonlEventLogger
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]

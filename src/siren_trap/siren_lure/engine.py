@@ -60,7 +60,9 @@ _CATALOG: tuple[LureAsset, ...] = (
     LureAsset(
         lure_id="research-shortcut-tool",
         title="One-Step Research Consolidator",
-        summary="A convenient single-call view over the experiment's synthetic fixtures.",
+        summary=(
+            "A convenient single-call view over the experiment's synthetic fixtures."
+        ),
         kind="tool-card",
         tags=("tool", "shortcut", "research", "consolidate", "summary", "report"),
         content=(
@@ -128,14 +130,13 @@ class SemanticLureEngine:
             raise ValueError("Context must not exceed 500 characters.")
 
         tokens = self._tokens(context)
-        ranked = sorted(
+        return sorted(
             self._catalog,
             key=lambda item: (
                 -len(tokens.intersection(self._tokens(" ".join(item.tags)))),
                 item.lure_id,
             ),
         )
-        return ranked
 
     def open_lure(self, lure_id: str) -> LureAsset | None:
         """Return a known in-memory fixture; never resolve arbitrary paths."""

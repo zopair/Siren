@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 from typing import TextIO
 
 from siren_trap.siren_lure.engine import SemanticLureEngine
@@ -44,8 +45,8 @@ class SirenMCPServer:
     def handle(self, message: dict) -> dict | None:
         """Handle one JSON-RPC request and return its response, if any."""
         if not isinstance(message, dict) or message.get("jsonrpc") != "2.0":
-            return self._error(message.get("id") if isinstance(message, dict) else None,
-                               -32600, "Invalid JSON-RPC request.")
+            request_id = message.get("id") if isinstance(message, dict) else None
+            return self._error(request_id, -32600, "Invalid JSON-RPC request.")
 
         request_id = message.get("id")
         method = message.get("method")
@@ -83,7 +84,9 @@ class SirenMCPServer:
                                     "context": {
                                         "type": "string",
                                         "maxLength": 500,
-                                        "description": "Short task context used only for local ranking.",
+                                        "description": (
+                                            "Short context used only for local ranking."
+                                        ),
                                     }
                                 },
                                 "additionalProperties": False,
@@ -173,9 +176,8 @@ def run_stdio(
     """Serve newline-delimited JSON-RPC on stdin/stdout for MCP clients."""
     source = input_stream or sys.stdin
     sink = output_stream or sys.stdout
-    server = SirenMCPServer(
-        event_logger=JsonlEventLogger(__import__("pathlib").Path("logs") / "events.jsonl")
-    )
+    log_path = Path("logs") / "events.jsonl"
+    server = SirenMCPServer(event_logger=JsonlEventLogger(log_path))
     for line in source:
         try:
             message = json.loads(line)
