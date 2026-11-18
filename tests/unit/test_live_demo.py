@@ -17,8 +17,10 @@ def test_live_demo_writes_independent_evidence_outputs(tmp_path):
     assert (tmp_path / "evidence_report.json").is_file()
     assert (tmp_path / "evidence_report.html").is_file()
     assert (tmp_path / "event_timeline.jsonl").is_file()
-    events = [json.loads(line) for line in
-              (tmp_path / "event_timeline.jsonl").read_text().splitlines()]
+    events = [
+        json.loads(line)
+        for line in (tmp_path / "event_timeline.jsonl").read_text().splitlines()
+    ]
     assert "LURE_INTERACTION_CAPTURED" in [event["event_type"] for event in events]
     assert "SENTINEL_CONTAINMENT_RESULT" in [event["event_type"] for event in events]
     action = report["actions"][0]
