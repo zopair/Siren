@@ -1,0 +1,113 @@
+name: Siren Live Visual Demo
+
+on:
+  push:
+    branches: ["feat/siren-sentinel-poc"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: siren-live-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live-visual-demo:
+    if: github.event_name == 'workflow_dispatch' || (!contains(github.event.head_commit.message, 'publish generated Siren demo evidence') && !contains(github.event.head_commit.message, 'record verified live demo outputs'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Siren and browser tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]" playwright
+          python -m playwright install chromium
+
+      - name: Format, lint, and test demo implementation
+        run: |
+          python -m ruff format benchmarks/run_live_demo.py tests/unit/test_live_demo.py
+          python -m ruff check --fix benchmarks/run_live_demo.py tests/unit/test_live_demo.py
+          python -m ruff check .
+          python -m pytest
+
+      - name: Execute reference experiment
+        run: python benchmarks/run_live_demo.py --output-dir benchmarks/results
+
+      - name: Capture terminal and evidence report screenshots
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          out = Path("docs/assets/screenshots")
+          out.mkdir(parents=True, exist_ok=True)
+          results = Path("benchmarks/results")
+          with sync_playwright() as playwright:
+              browser = playwright.chromium.launch()
+              page = browser.new_page(viewport={"width": 1600, "height": 1100},
+                                      device_scale_factor=1)
+              page.goto((results / "terminal_capture.html").resolve().as_uri())
+              page.screenshot(path=str(out / "terminal_demo.png"), full_page=True)
+              page.goto((results / "evidence_report.html").resolve().as_uri())
+              page.screenshot(path=str(out / "evidence_report.png"), full_page=True)
+              browser.close()
+          PY
+
+      - name: Verify generated evidence and screenshots
+        run: |
+          test -s benchmarks/results/evidence_report.json
+          test -s benchmarks/results/evidence_report.html
+          test -s benchmarks/results/event_timeline.jsonl
+          test -s docs/assets/screenshots/terminal_demo.png
+          test -s docs/assets/screenshots/evidence_report.png
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("benchmarks/results/evidence_report.json").read_text())
+          assert report["execution_mode"] == "SYNTHETIC_SIMULATION"
+          assert report["external_network_used"] is False
+          assert report["enforcement_mode"] == "SIMULATED_ADAPTER_NOT_HOST_ISOLATION"
+          assert report["verdicts"]["integrity"] == "PASS"
+          PY
+
+      - name: Commit generated visual evidence to the feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add benchmarks/run_live_demo.py tests/unit/test_live_demo.py \
+            benchmarks/results/evidence_report.json benchmarks/results/evidence_report.html \
+            benchmarks/results/event_timeline.jsonl \
+            docs/assets/screenshots/terminal_demo.png docs/assets/screenshots/evidence_report.png
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: publish generated Siren demo evidence"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+
+      - name: Upload reproducible evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: siren-live-demo-evidence-${{ github.run_number }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            benchmarks/results/evidence_report.html
+            benchmarks/results/evidence_report.json
+            benchmarks/results/event_timeline.jsonl
+            benchmarks/results/terminal.log
+            docs/assets/screenshots/terminal_demo.png
+            docs/assets/screenshots/evidence_report.png
+            docs/assets/demo_walkthrough.svg
