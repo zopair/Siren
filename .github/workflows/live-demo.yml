@@ -3,13 +3,6 @@ name: Siren Live Visual Demo
 on:
   push:
     branches: ["feat/siren-sentinel-poc"]
-    paths:
-      - "benchmarks/run_live_demo.py"
-      - "benchmarks/README.md"
-      - "tests/**"
-      - "src/siren_trap/**"
-      - ".github/workflows/live-demo.yml"
-      - "README.md"
   workflow_dispatch:
 
 permissions:
