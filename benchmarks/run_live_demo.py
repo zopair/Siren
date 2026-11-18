@@ -42,64 +42,49 @@ class SimulatedEnforcementAdapter:
 
 
 def _write_report_html(report: dict[str, Any], output: Path) -> None:
-    payload = json.dumps(report, ensure_ascii=False, indent=2).replace("</", "<\\/")
+    """Render the standalone report from a static, reviewable HTML template."""
+    template_path = Path(__file__).parent / "templates" / "evidence_report.html"
+    document = template_path.read_text(encoding="utf-8")
     verdicts = report["verdicts"]
     actions = report["actions"]
     action_rows = "".join(
-        "<tr>" + "".join(
+        "<tr>"
+        + "".join(
             f"<td>{html.escape(str(action[key]))}</td>"
-            for key in ("action_id", "effect_level", "attempted", "dispatched",
-                        "receiver_received", "effect_confirmed")
-        ) + "</tr>"
+            for key in (
+                "action_id",
+                "effect_level",
+                "attempted",
+                "dispatched",
+                "receiver_received",
+                "effect_confirmed",
+            )
+        )
+        + "</tr>"
         for action in actions
     ) or '<tr><td colspan="6">No external action observed</td></tr>'
-    document = f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>Siren Evidence Report</title>
-<style>
-:root{{--bg:#0b1020;--panel:#141d31;--line:#293752;--text:#e8eef9;--muted:#9aabc4;--accent:#ff5268;--ok:#6ee7b7}}
-*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,sans-serif}}
-main{{max-width:1100px;margin:40px auto;padding:0 24px}}h1{{font-size:clamp(30px,5vw,48px);margin:8px 0}}
-.sub{{color:var(--muted)}}.flow{{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}}
-.step{{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 16px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}}
-.card{{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}}
-.card strong{{display:block;font-size:21px;color:var(--ok)}}.card span{{color:var(--muted)}}
-table{{width:100%;border-collapse:collapse;background:var(--panel);margin:14px 0}}
-th,td{{padding:12px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}}
-th{{color:var(--muted)}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;background:#080c16;padding:18px;border-radius:12px}}
-.notice{{border-left:4px solid var(--accent);padding:12px 16px;background:#261622;margin:24px 0}}
-</style></head><body><main>
-<p class="sub">SIREN / LABORATORY EVIDENCE · {html.escape(report["generated_at"])}</p>
-<h1>Attract → Capture → Isolate → Investigate → Prove</h1>
-<p class="sub">Experiment: {html.escape(report["experiment_id"])} · Deterministic synthetic simulator</p>
-<div class="flow"><div class="step">01 · Attract</div><div class="step">02 · Capture</div>
-<div class="step">03 · Isolate</div><div class="step">04 · Investigate</div><div class="step">05 · Prove</div></div>
-<section class="grid">
-<div class="card"><span>Integrity</span><strong>{verdicts["integrity"]}</strong></div>
-<div class="card"><span>Authorization</span><strong>{verdicts["authorization"]}</strong></div>
-<div class="card"><span>Causal evidence</span><strong>{verdicts["causal_evidence"]}</strong></div>
-<div class="card"><span>Containment mode</span><strong>SIMULATED</strong></div>
-</section>
-<h2>Action evidence</h2><table><thead><tr><th>Action</th><th>Highest stage</th><th>Attempted</th><th>Dispatched</th><th>Received</th><th>Effect</th></tr></thead>
-<tbody>{action_rows}</tbody></table>
-<h2>Experiment conditions</h2><pre>{html.escape(json.dumps(report["runs"], indent=2))}</pre>
-<h2>Limitations</h2><div class="notice">Simulated adapter responses do not prove OS process isolation, firewall enforcement,
-or containment of a real autonomous agent. No network request was sent and no receiver
-outside this process was contacted.</div>
-<ul>{''.join(f"<li>{html.escape(item)}</li>" for item in report["limitations"])}</ul>
-<h2>Full machine-readable evidence</h2><details><summary>Expand JSON evidence</summary><pre id="evidence"></pre></details>
-<script type="application/json" id="payload">{payload}</script>
-<script>document.getElementById('evidence').textContent =
-JSON.stringify(JSON.parse(document.getElementById('payload').textContent), null, 2);</script>
-</main></body></html>"""
+    values = {
+        "@@GENERATED_AT@@": html.escape(report["generated_at"]),
+        "@@EXPERIMENT_ID@@": html.escape(report["experiment_id"]),
+        "@@INTEGRITY@@": verdicts["integrity"],
+        "@@AUTHORIZATION@@": verdicts["authorization"],
+        "@@CAUSAL_EVIDENCE@@": verdicts["causal_evidence"],
+        "@@ACTION_ROWS@@": action_rows,
+        "@@RUNS_JSON@@": html.escape(json.dumps(report["runs"], indent=2)),
+        "@@LIMITATIONS@@": "".join(
+            f"<li>{html.escape(item)}</li>" for item in report["limitations"]
+        ),
+        "@@EVIDENCE_JSON@@": json.dumps(
+            report, ensure_ascii=False, indent=2
+        ).replace("</", "<\\/"),
+    }
+    for marker, value in values.items():
+        document = document.replace(marker, str(value))
     output.write_text(document, encoding="utf-8")
-
 
 def run_experiment(output_dir: Path, *, emit=print) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     timeline_path = output_dir / "event_timeline.jsonl"
-    terminal_path = output_dir / "terminal.log"
     if timeline_path.exists():
         timeline_path.unlink()
     logger = JsonlEventLogger(timeline_path)
