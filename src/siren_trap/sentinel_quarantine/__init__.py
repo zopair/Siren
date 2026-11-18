@@ -1,5 +1,17 @@
-"""Sentinel session containment package.
+"""Out-of-process enforcement orchestration for agent session quarantine."""
 
-Enforcement and quarantine implementation are scheduled for delivery batch 2.
-No containment guarantee is provided by this scaffold.
-"""
+from siren_trap.sentinel_quarantine.core import (
+    ContainmentStatus,
+    EnforcementAdapter,
+    EnforcementResult,
+    SentinelQuarantine,
+    TriggerReason,
+)
+
+__all__ = [
+    "ContainmentStatus",
+    "EnforcementAdapter",
+    "EnforcementResult",
+    "SentinelQuarantine",
+    "TriggerReason",
+]
