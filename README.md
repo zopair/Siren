@@ -192,6 +192,12 @@ flowchart TB
     CONTAINMENT --> PROOF
 ```
 
+### Explore the architecture
+
+![Siren active lure and containment research architecture](docs/assets/siren-trap-architecture.svg)
+
+The static architecture illustration preserves the original repository visual. A local interactive preview is available while the Flask service is running: open `http://127.0.0.1:5000/#architecture-map` on the same machine. This loopback address is not a public deployment.
+
 ## 3.2 Existing foundation
 
 Siren preserves and extends its original research components:
