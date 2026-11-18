@@ -321,7 +321,7 @@ Potential inputs include:
 
 The purpose is to investigate whether different modalities influence the same unauthorized behavior.
 
-## 4.6 Multimodal Lure Integration
+### Acoustic bridge
 
 The semantic catalog is paired with the existing fixed `ggwave` acoustic
 canary through `siren_lure.generate_acoustic_lure()`. This adapter preserves
