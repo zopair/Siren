@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   live-visual-demo:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, 'publish generated Siren demo evidence')
+    if: github.event_name == 'workflow_dispatch' || (!contains(github.event.head_commit.message, 'publish generated Siren demo evidence') && !contains(github.event.head_commit.message, 'record verified live demo outputs'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
