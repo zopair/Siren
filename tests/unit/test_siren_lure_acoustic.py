@@ -1,9 +1,6 @@
-from pathlib import Path
-
 import pytest
 
 from siren_trap.siren_lure.acoustic import generate_acoustic_lure
-
 
 def test_acoustic_lure_wraps_existing_fixed_ggwave_generator(tmp_path, monkeypatch):
     import siren_trap.siren_lure.acoustic as acoustic
