@@ -258,7 +258,7 @@ The Pages site is a static research documentation site. The live visual demo wor
 
 ![Siren architecture diagram](docs/assets/siren-trap-architecture.svg)
 
-The terminal and evidence screenshots are generated from the synthetic simulation. They do not demonstrate a real external agent or host-level containment.
+The terminal and evidence screenshots are generated from the synthetic simulation. They do not demonstrate a real external agent or host-level containment. The **interactive architecture** preview is also available from the local Flask service at `http://127.0.0.1:5000/#architecture-map` while the service is running; this is a loopback-only preview, not a public deployment.
 
 ## 8. Testing & Verification
 
