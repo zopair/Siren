@@ -229,6 +229,8 @@ The marker is fixed in source code; arbitrary commands or user-supplied payloads
 
 Sentinel is a policy/orchestration layer. It calls an injected enforcement adapter for session revocation, egress blocking, delegated-child containment, and quarantine. The repository does **not** ship a host-level firewall, process supervisor, kernel sandbox, or production enforcement adapter. The synthetic demo uses an in-memory simulator and must not be represented as real containment.
 
+The expanded research narrative from the previous README has been preserved in [Expanded Research Reference](docs/EXPANDED_RESEARCH_REFERENCE.md), so the concise setup guide does not discard the earlier technical explanation.
+
 Detailed technical references:
 
 - [Architecture](docs/ARCHITECTURE.md)
